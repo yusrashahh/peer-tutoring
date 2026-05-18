@@ -1,0 +1,258 @@
+{% extends 'base.html' %}
+{% block title %}Login — PeerTutor{% endblock %}
+{% block content %}
+
+<div style="min-height:80vh;display:flex;align-items:center;justify-content:center;position:relative">
+
+  <!-- Background floating doodles -->
+  <svg style="position:fixed;top:80px;left:30px;opacity:0.08;pointer-events:none"
+      width="120" height="120" viewBox="0 0 120 120">
+    <path d="M60 10L63 45L95 60L63 75L60 110L57 75L25 60L57 45Z"
+        stroke="#4CAFAE" stroke-width="2" fill="none"/>
+  </svg>
+  <svg style="position:fixed;bottom:120px;right:40px;opacity:0.08;pointer-events:none"
+      width="100" height="100" viewBox="0 0 100 100">
+    <circle cx="50" cy="50" r="40" stroke="#CE6385" stroke-width="2" fill="none" stroke-dasharray="8 5"/>
+  </svg>
+  <svg style="position:fixed;top:200px;right:80px;opacity:0.07;pointer-events:none"
+      width="80" height="80" viewBox="0 0 80 80">
+    <rect x="10" y="10" width="60" height="60" rx="12"
+        stroke="#FCCE90" stroke-width="2" fill="none" transform="rotate(15 40 40)"/>
+  </svg>
+  <svg style="position:fixed;bottom:200px;left:60px;opacity:0.07;pointer-events:none"
+      width="70" height="70" viewBox="0 0 70 70">
+    <path d="M35 5 L40 25 L60 25 L45 38 L50 58 L35 46 L20 58 L25 38 L10 25 L30 25Z"
+        stroke="#EB98B4" stroke-width="2" fill="none"/>
+  </svg>
+
+  <div class="row w-100 justify-content-center align-items-center g-0" style="max-width:900px">
+
+    <!-- Left illustration panel -->
+    <div class="col-md-5 d-none d-md-flex flex-column align-items-center justify-content-center p-5"
+        style="background:linear-gradient(135deg,#CE6385,#EB98B4);
+        border-radius:24px 0 0 24px;min-height:520px;position:relative;overflow:hidden">
+
+      <!-- Blob decorations -->
+      <div style="position:absolute;width:180px;height:180px;border-radius:50%;
+          background:rgba(255,255,255,0.1);top:-50px;right:-50px"></div>
+      <div style="position:absolute;width:120px;height:120px;border-radius:50%;
+          background:rgba(255,255,255,0.08);bottom:-30px;left:-30px"></div>
+
+      <!-- Cute studying illustration -->
+      <svg viewBox="0 0 300 320" width="240" xmlns="http://www.w3.org/2000/svg">
+        <!-- Desk -->
+        <rect x="30" y="240" width="240" height="14" rx="7" fill="rgba(255,255,255,0.3)"/>
+        <rect x="50" y="254" width="12" height="50" rx="6" fill="rgba(255,255,255,0.2)"/>
+        <rect x="238" y="254" width="12" height="50" rx="6" fill="rgba(255,255,255,0.2)"/>
+        <!-- Laptop -->
+        <rect x="80" y="180" width="140" height="62" rx="8" fill="rgba(255,255,255,0.25)"/>
+        <rect x="88" y="187" width="124" height="48" rx="5" fill="rgba(255,255,255,0.15)"/>
+        <rect x="60" y="240" width="180" height="8" rx="4" fill="rgba(255,255,255,0.2)"/>
+        <!-- Screen glow -->
+        <rect x="92" y="191" width="116" height="40" rx="4" fill="rgba(252,206,144,0.3)"/>
+        <rect x="100" y="198" width="60" height="5" rx="2" fill="rgba(255,255,255,0.5)"/>
+        <rect x="100" y="208" width="80" height="4" rx="2" fill="rgba(255,255,255,0.3)"/>
+        <rect x="100" y="217" width="50" height="4" rx="2" fill="rgba(255,255,255,0.3)"/>
+        <!-- Coffee mug -->
+        <rect x="220" y="210" width="30" height="28" rx="6" fill="rgba(255,255,255,0.3)"/>
+        <path d="M250 216 Q262 216 262 226 Q262 236 250 236"
+            stroke="rgba(255,255,255,0.3)" stroke-width="3" fill="none"/>
+        <ellipse cx="235" cy="210" rx="15" ry="4" fill="rgba(255,255,255,0.2)"/>
+        <!-- Steam -->
+        <path d="M228 206 Q230 200 228 194" stroke="rgba(255,255,255,0.4)"
+            stroke-width="2" fill="none" stroke-linecap="round"/>
+        <path d="M236 204 Q238 198 236 192" stroke="rgba(255,255,255,0.4)"
+            stroke-width="2" fill="none" stroke-linecap="round"/>
+        <!-- Person body -->
+        <rect x="118" y="110" width="64" height="78" rx="18" fill="rgba(255,255,255,0.25)"/>
+        <!-- Neck -->
+        <rect x="143" y="88" width="14" height="26" rx="7" fill="#FEE7BC"/>
+        <!-- Head -->
+        <ellipse cx="150" cy="68" rx="34" ry="36" fill="#FEE7BC"/>
+        <!-- Hair -->
+        <path d="M116 54 Q120 24 150 22 Q180 24 184 54 Q170 36 150 34 Q130 36 116 54Z"
+            fill="#CE6385"/>
+        <path d="M116 54 Q108 66 112 82" fill="#CE6385"/>
+        <path d="M184 54 Q192 66 188 82" fill="#CE6385"/>
+        <!-- Bun -->
+        <circle cx="150" cy="28" r="14" fill="#CE6385"/>
+        <!-- Eyes — happy/focused -->
+        <path d="M134 64 Q140 60 146 64" stroke="#1e293b" stroke-width="2.5"
+            fill="none" stroke-linecap="round"/>
+        <path d="M154 64 Q160 60 166 64" stroke="#1e293b" stroke-width="2.5"
+            fill="none" stroke-linecap="round"/>
+        <!-- Rosy cheeks -->
+        <ellipse cx="126" cy="72" rx="9" ry="6" fill="#fca5a5" opacity="0.5"/>
+        <ellipse cx="174" cy="72" rx="9" ry="6" fill="#fca5a5" opacity="0.5"/>
+        <!-- Smile -->
+        <path d="M136 80 Q150 90 164 80" stroke="#d97706"
+            stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <!-- Arms -->
+        <path d="M118 130 Q94 140 88 162" stroke="rgba(255,255,255,0.25)"
+            stroke-width="18" fill="none" stroke-linecap="round"/>
+        <ellipse cx="86" cy="170" rx="13" ry="12" fill="#FEE7BC"/>
+        <path d="M182 130 Q206 140 212 162" stroke="rgba(255,255,255,0.25)"
+            stroke-width="18" fill="none" stroke-linecap="round"/>
+        <ellipse cx="214" cy="170" rx="13" ry="12" fill="#FEE7BC"/>
+        <!-- Floating stars -->
+        <path d="M44 80 L45.5 74 L47 80 L53 81.5 L47 83 L45.5 89 L44 83 L38 81.5Z"
+            fill="rgba(252,206,144,0.8)"/>
+        <path d="M240 60 L241 56 L242 60 L246 61 L242 62 L241 66 L240 62 L236 61Z"
+            fill="rgba(255,255,255,0.7)"/>
+        <circle cx="260" cy="100" r="4" fill="rgba(255,255,255,0.4)"/>
+        <circle cx="38" cy="140" r="3" fill="rgba(252,206,144,0.5)"/>
+      </svg>
+
+      <!-- Text below illustration -->
+      <div class="text-center mt-3">
+        <h4 style="font-family:'Satisfy',cursive;color:#fff;font-size:1.6rem;margin-bottom:6px">
+          Welcome back! 👋
+        </h4>
+        <p style="color:rgba(255,255,255,0.8);font-size:0.9rem">
+          Your tutors are waiting for you
+        </p>
+        <!-- Floating badges -->
+        <div class="d-flex gap-2 justify-content-center mt-3 flex-wrap">
+          <span style="background:rgba(255,255,255,0.2);color:#fff;
+              padding:5px 14px;border-radius:20px;font-size:0.78rem;font-weight:600">
+            📚 Learn
+          </span>
+          <span style="background:rgba(255,255,255,0.2);color:#fff;
+              padding:5px 14px;border-radius:20px;font-size:0.78rem;font-weight:600">
+            🌟 Grow
+          </span>
+          <span style="background:rgba(255,255,255,0.2);color:#fff;
+              padding:5px 14px;border-radius:20px;font-size:0.78rem;font-weight:600">
+            🚀 Succeed
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right form panel -->
+    <div class="col-md-7 col-12">
+      <div style="background:#fff;border-radius:0 24px 24px 0;
+          padding:48px 44px;min-height:520px;
+          box-shadow:0 20px 60px rgba(206,99,133,0.15)">
+
+        <!-- Logo -->
+        <div class="text-center mb-4">
+          <span style="font-family:'Satisfy',cursive;font-size:2rem;color:#CE6385">
+            📚 PeerTutor
+          </span>
+        </div>
+
+        <h3 class="fw-bold mb-1" style="color:#1e293b">Sign in</h3>
+        <p class="text-muted mb-4" style="font-size:0.9rem">
+          Don't have an account?
+          <a href="{% url 'register' %}" style="color:#4CAFAE;font-weight:600;text-decoration:none">
+            Join free →
+          </a>
+        </p>
+
+        {% if messages %}
+          {% for message in messages %}
+            <div class="alert alert-danger py-2 small">{{ message }}</div>
+          {% endfor %}
+        {% endif %}
+
+        <form method="POST" id="loginForm">
+          {% csrf_token %}
+
+          <!-- Username -->
+          <div class="mb-3">
+            <label class="form-label fw-bold small" style="color:#CE6385">
+              👤 Username
+            </label>
+            <input type="text" name="username" class="form-control"
+                placeholder="Enter your username"
+                style="border:2px solid #fce8ec;border-radius:12px;padding:12px 16px;font-size:0.95rem"
+                onfocus="this.style.borderColor='#4CAFAE'"
+                onblur="this.style.borderColor='#fce8ec'"
+                required>
+          </div>
+
+          <!-- Password -->
+          <div class="mb-4" style="position:relative">
+            <label class="form-label fw-bold small" style="color:#CE6385">
+              🔒 Password
+            </label>
+            <input type="password" name="password" id="passwordInput" class="form-control"
+                placeholder="Enter your password"
+                style="border:2px solid #fce8ec;border-radius:12px;
+                padding:12px 48px 12px 16px;font-size:0.95rem"
+                onfocus="this.style.borderColor='#4CAFAE'"
+                onblur="this.style.borderColor='#fce8ec'"
+                required>
+            <!-- Show/hide password -->
+            <span onclick="togglePassword()" style="position:absolute;right:14px;
+                bottom:12px;cursor:pointer;font-size:1.1rem" id="eyeIcon">👁️</span>
+          </div>
+
+          <!-- Login button -->
+          <button type="submit" class="btn btn-primary w-100 py-3 fw-bold"
+              style="border-radius:12px;font-size:1rem;
+              background:linear-gradient(135deg,#CE6385,#EB98B4) !important;
+              border:none;letter-spacing:0.3px;transition:all 0.3s"
+              onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 25px rgba(206,99,133,0.4)'"
+              onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none'">
+            Sign In ✨
+          </button>
+        </form>
+
+        <!-- Divider -->
+        <div style="display:flex;align-items:center;gap:12px;margin:24px 0">
+          <div style="flex:1;height:1px;background:#fce8ec"></div>
+          <span style="color:#9ca3af;font-size:0.8rem">or</span>
+          <div style="flex:1;height:1px;background:#fce8ec"></div>
+        </div>
+
+        <!-- Browse without login -->
+        <a href="{% url 'tutor_list' %}"
+            style="display:block;text-align:center;
+            background:#fff5f7;border:2px solid #fce8ec;
+            color:#CE6385;padding:12px;border-radius:12px;
+            font-weight:600;text-decoration:none;font-size:0.9rem;
+            transition:all 0.2s"
+            onmouseover="this.style.borderColor='#4CAFAE';this.style.color='#4CAFAE'"
+            onmouseout="this.style.borderColor='#fce8ec';this.style.color='#CE6385'">
+          🔍 Browse Tutors Without Logging In
+        </a>
+
+        <!-- Stats row -->
+        <div class="row text-center mt-4 g-2">
+          <div class="col-4">
+            <div style="font-size:1.2rem;font-weight:800;color:#CE6385">50+</div>
+            <div style="font-size:0.7rem;color:#9ca3af">Tutors</div>
+          </div>
+          <div class="col-4">
+            <div style="font-size:1.2rem;font-weight:800;color:#4CAFAE">100+</div>
+            <div style="font-size:0.7rem;color:#9ca3af">Sessions</div>
+          </div>
+          <div class="col-4">
+            <div style="font-size:1.2rem;font-weight:800;color:#FCCE90">⭐ 4.9</div>
+            <div style="font-size:0.7rem;color:#9ca3af">Rating</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+function togglePassword() {
+  const input = document.getElementById('passwordInput');
+  const icon = document.getElementById('eyeIcon');
+  if (input.type === 'password') {
+    input.type = 'text';
+    icon.textContent = '🙈';
+  } else {
+    input.type = 'password';
+    icon.textContent = '👁️';
+  }
+}
+</script>
+
+{% endblock %}

@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+{% block title %}Leave a Review{% endblock %}
+{% block content %}
+
+<div class="row justify-content-center">
+  <div class="col-md-7">
+
+    <div class="text-center mb-4">
+      <h2 style="font-family:'Satisfy',cursive;font-size:2.5rem;color:#064e3b">
+        Leave a Review ⭐
+      </h2>
+      <p class="text-muted">How was your session with
+        <strong style="color:#064e3b">{{ booking.tutor.user.username }}</strong>?
+      </p>
+    </div>
+
+    <div class="card p-5" style="border-radius:24px;border:1px solid #d1fae5;
+        box-shadow:0 8px 40px rgba(16,185,129,0.1)">
+
+      <!-- Tutor info -->
+      <div class="d-flex align-items-center gap-3 mb-4 p-3 rounded-3"
+          style="background:#f0fdf4">
+        <div class="avatar-circle" style="width:52px;height:52px;font-size:1.2rem;flex-shrink:0">
+          {{ booking.tutor.user.username|first|upper }}
+        </div>
+        <div>
+          <div class="fw-bold" style="color:#064e3b">{{ booking.tutor.user.username }}</div>
+          <div class="small text-muted">
+            Session on {{ booking.session_date|date:"M d, Y" }}
+          </div>
+        </div>
+      </div>
+
+      <form method="POST">
+        {% csrf_token %}
+        {{ form.rating }}
+
+        <!-- Star picker -->
+        <div class="text-center mb-4">
+          <div class="fw-bold mb-3" style="color:#064e3b;font-size:1rem">Your Rating</div>
+          <div id="star-container" style="font-size:3rem;cursor:pointer;
+              letter-spacing:8px;user-select:none">
+            <span class="star" data-value="1" style="color:#d1d5db">★</span>
+            <span class="star" data-value="2" style="color:#d1d5db">★</span>
+            <span class="star" data-value="3" style="color:#d1d5db">★</span>
+            <span class="star" data-value="4" style="color:#d1d5db">★</span>
+            <span class="star" data-value="5" style="color:#d1d5db">★</span>
+          </div>
+          <div id="rating-label" class="text-muted small mt-2">Click a star to rate</div>
+        </div>
+
+        <!-- Quick tags -->
+        <div class="mb-4">
+          <div class="fw-bold mb-2" style="color:#064e3b;font-size:0.9rem">
+            Quick Tags (click to add to review)
+          </div>
+          <div class="d-flex flex-wrap gap-2">
+            <span class="tag-btn" style="background:#f0fdf4;border:1px solid #bbf7d0;color:#064e3b;padding:5px 14px;border-radius:20px;font-size:0.8rem;cursor:pointer">Very helpful</span>
+            <span class="tag-btn" style="background:#f0fdf4;border:1px solid #bbf7d0;color:#064e3b;padding:5px 14px;border-radius:20px;font-size:0.8rem;cursor:pointer">Patient teacher</span>
+            <span class="tag-btn" style="background:#f0fdf4;border:1px solid #bbf7d0;color:#064e3b;padding:5px 14px;border-radius:20px;font-size:0.8rem;cursor:pointer">Clear explanations</span>
+            <span class="tag-btn" style="background:#f0fdf4;border:1px solid #bbf7d0;color:#064e3b;padding:5px 14px;border-radius:20px;font-size:0.8rem;cursor:pointer">Highly recommend</span>
+            <span class="tag-btn" style="background:#f0fdf4;border:1px solid #bbf7d0;color:#064e3b;padding:5px 14px;border-radius:20px;font-size:0.8rem;cursor:pointer">Great communicator</span>
+            <span class="tag-btn" style="background:#f0fdf4;border:1px solid #bbf7d0;color:#064e3b;padding:5px 14px;border-radius:20px;font-size:0.8rem;cursor:pointer">Punctual</span>
+            <span class="tag-btn" style="background:#f0fdf4;border:1px solid #bbf7d0;color:#064e3b;padding:5px 14px;border-radius:20px;font-size:0.8rem;cursor:pointer">Knowledgeable</span>
+            <span class="tag-btn" style="background:#f0fdf4;border:1px solid #bbf7d0;color:#064e3b;padding:5px 14px;border-radius:20px;font-size:0.8rem;cursor:pointer">Friendly</span>
+          </div>
+        </div>
+
+        <!-- Comment -->
+        <div class="mb-4">
+          <label class="form-label fw-bold" style="color:#064e3b">Your Review</label>
+          {{ form.comment }}
+        </div>
+
+        <!-- Doodle -->
+        <div style="text-align:center;margin-bottom:20px;opacity:0.15">
+          <svg width="200" height="30" viewBox="0 0 200 30">
+            <path d="M10 15 Q50 5 100 15 Q150 25 190 15"
+                stroke="#059669" stroke-width="2" fill="none" stroke-dasharray="6 3"/>
+          </svg>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100 py-3"
+            style="font-size:1rem;font-weight:700">
+          Submit Review ⭐
+        </button>
+
+      </form>
+    </div>
+
+    <!-- Sparkles -->
+    <div style="text-align:center;margin-top:16px;opacity:0.4">
+      <svg width="300" height="40" viewBox="0 0 300 40">
+        <path d="M30 20 L31.5 14 L33 20 L39 21.5 L33 23 L31.5 29 L30 23 L24 21.5Z" fill="#fbbf24"/>
+        <path d="M150 10 L151 7 L152 10 L155 11 L152 12 L151 15 L150 12 L147 11Z" fill="#10b981"/>
+        <path d="M270 20 L271.5 14 L273 20 L279 21.5 L273 23 L271.5 29 L270 23 L264 21.5Z" fill="#fbbf24"/>
+        <circle cx="100" cy="20" r="4" fill="#10b981" opacity="0.6"/>
+        <circle cx="200" cy="15" r="3" fill="#fbbf24" opacity="0.6"/>
+      </svg>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const stars = document.querySelectorAll('.star');
+const ratingInput = document.querySelector('#id_rating');
+const ratingLabel = document.getElementById('rating-label');
+const labels = ['','Terrible 😞','Poor 😕','Okay 😐','Good 😊','Excellent! 🤩'];
+
+stars.forEach(star => {
+  star.addEventListener('mouseover', () => {
+    const val = parseInt(star.dataset.value);
+    stars.forEach((s,i) => { s.style.color = i < val ? '#fbbf24' : '#d1d5db'; });
+  });
+  star.addEventListener('click', () => {
+    const val = parseInt(star.dataset.value);
+    ratingInput.value = val;
+    ratingLabel.textContent = labels[val];
+    ratingLabel.style.color = '#059669';
+    ratingLabel.style.fontWeight = '600';
+    stars.forEach((s,i) => { s.style.color = i < val ? '#fbbf24' : '#d1d5db'; });
+  });
+});
+
+document.getElementById('star-container').addEventListener('mouseleave', () => {
+  const val = parseInt(ratingInput.value) || 0;
+  stars.forEach((s,i) => { s.style.color = i < val ? '#fbbf24' : '#d1d5db'; });
+});
+
+document.querySelectorAll('.tag-btn').forEach(tag => {
+  tag.addEventListener('click', () => {
+    const comment = document.querySelector('#id_comment');
+    const text = tag.textContent.trim();
+    comment.value = comment.value ? comment.value + ', ' + text : text;
+    tag.style.background = '#d1fae5';
+    tag.style.borderColor = '#059669';
+    tag.style.fontWeight = '600';
+  });
+});
+</script>
+
+{% endblock %}

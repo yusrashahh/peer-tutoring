@@ -1,0 +1,199 @@
+{% extends 'base.html' %}
+{% block title %}My Bookings{% endblock %}
+{% block content %}
+
+<div class="text-center mb-5">
+  <h2 style="font-family:'Satisfy',cursive;font-size:2.8rem;color:#CE6385">
+    My Bookings 📅
+  </h2>
+  <p class="text-muted">Track all your tutoring sessions in one place</p>
+</div>
+
+{% if bookings %}
+
+<!-- Stats row -->
+<div class="row g-3 mb-4">
+  <div class="col-6 col-md-3">
+    <div class="card p-3 text-center" style="border-top:3px solid #FCCE90">
+      <div style="font-size:1.8rem;font-weight:800;color:#CE6385">
+        {{ bookings|length }}
+      </div>
+      <div class="text-muted small">Total</div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="card p-3 text-center" style="border-top:3px solid #4CAFAE">
+      <div style="font-size:1.8rem;font-weight:800;color:#CE6385">
+        {% with bookings|length as total %}
+        {{ bookings|dictsort:"status"|length }}
+        {% endwith %}
+      </div>
+      <div class="text-muted small">Confirmed</div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="card p-3 text-center" style="border-top:3px solid #6366f1">
+      <div style="font-size:1.8rem;font-weight:800;color:#CE6385">0</div>
+      <div class="text-muted small">Completed</div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="card p-3 text-center" style="border-top:3px solid #f87171">
+      <div style="font-size:1.8rem;font-weight:800;color:#CE6385">0</div>
+      <div class="text-muted small">Pending</div>
+    </div>
+  </div>
+</div>
+
+<!-- Bookings list -->
+<div class="d-flex flex-column gap-3">
+  {% for booking in bookings %}
+  {% if booking.status == 'confirmed' %}
+  <div class="card p-4" style="border-radius:20px;border:1px solid #e5e7eb;border-left:4px solid #4CAFAE">
+  {% elif booking.status == 'pending' %}
+  <div class="card p-4" style="border-radius:20px;border:1px solid #e5e7eb;border-left:4px solid #FCCE90">
+  {% elif booking.status == 'completed' %}
+  <div class="card p-4" style="border-radius:20px;border:1px solid #e5e7eb;border-left:4px solid #6366f1">
+  {% else %}
+  <div class="card p-4" style="border-radius:20px;border:1px solid #e5e7eb;border-left:4px solid #f87171">
+  {% endif %}
+
+    <div class="row align-items-center g-3">
+
+      <!-- Tutor/Student info -->
+      <div class="col-md-3 d-flex align-items-center gap-3">
+        <div class="avatar-circle" style="width:48px;height:48px;font-size:1.1rem;flex-shrink:0">
+          {% if user.is_student %}
+            {{ booking.tutor.user.username|first|upper }}
+          {% else %}
+            {{ booking.student.username|first|upper }}
+          {% endif %}
+        </div>
+        <div>
+          <div class="fw-bold" style="color:#CE6385;font-size:0.95rem">
+            {% if user.is_student %}
+              {{ booking.tutor.user.username }}
+              <span class="badge" style="background:#fce8ec;color:#CE6385;
+                  font-size:0.7rem;font-weight:500">Tutor</span>
+            {% else %}
+              {{ booking.student.username }}
+              <span class="badge" style="background:#ede9fe;color:#4c1d95;
+                  font-size:0.7rem;font-weight:500">Student</span>
+            {% endif %}
+          </div>
+          <div class="text-muted small">
+            {{ booking.session_date|date:"M d, Y" }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Time -->
+      <div class="col-md-2 text-center">
+        <div style="font-size:0.75rem;color:#9ca3af;font-weight:600;
+            text-transform:uppercase;letter-spacing:0.5px">Time</div>
+        <div class="fw-bold" style="color:#374151">
+          {{ booking.session_date|date:"g:i A" }}
+        </div>
+      </div>
+
+      <!-- Status badge -->
+      <div class="col-md-2 text-center">
+        {% if booking.status == 'confirmed' %}
+        <span style="padding:6px 16px;border-radius:20px;font-size:0.8rem;font-weight:700;background:#fce8ec;color:#CE6385;">
+        {% elif booking.status == 'pending' %}
+        <span style="padding:6px 16px;border-radius:20px;font-size:0.8rem;font-weight:700;background:#FEE7BC;color:#CE6385;">
+        {% elif booking.status == 'completed' %}
+        <span style="padding:6px 16px;border-radius:20px;font-size:0.8rem;font-weight:700;background:#ede9fe;color:#4c1d95;">
+        {% else %}
+        <span style="padding:6px 16px;border-radius:20px;font-size:0.8rem;font-weight:700;background:#fee2e2;color:#991b1b;">
+        {% endif %}
+          {% if booking.status == 'pending' %}⏳ Pending
+          {% elif booking.status == 'confirmed' %}✅ Confirmed
+          {% elif booking.status == 'completed' %}🎓 Completed
+          {% else %}❌ Cancelled{% endif %}
+        </span>
+      </div>
+
+      <!-- Notes -->
+      <div class="col-md-3">
+        {% if booking.notes %}
+          <div style="font-size:0.8rem;color:#6b7280;background:#f8fafc;
+              padding:8px 12px;border-radius:10px;
+              border-left:3px solid #fce8ec">
+            {{ booking.notes|truncatewords:10 }}
+          </div>
+        {% else %}
+          <div style="font-size:0.8rem;color:#d1d5db">No notes</div>
+        {% endif %}
+      </div>
+
+      <!-- Actions -->
+      <div class="col-md-2 d-flex flex-column gap-2">
+        {% if user.is_tutor %}
+          {% if booking.status == 'pending' %}
+            <a href="{% url 'confirm_booking' booking.pk %}"
+                class="btn btn-primary btn-sm"
+                style="font-size:0.8rem;border-radius:20px">
+              ✅ Confirm
+            </a>
+          {% endif %}
+          {% if booking.status == 'confirmed' %}
+            <a href="{% url 'complete_booking' booking.pk %}"
+                class="btn btn-sm fw-bold"
+                style="background:#6366f1;color:#fff;border-radius:20px;
+                font-size:0.8rem">
+              🎓 Complete
+            </a>
+          {% endif %}
+        {% endif %}
+        {% if booking.status == 'pending' or booking.status == 'confirmed' %}
+  <a href="{% url 'cancel_booking' booking.pk %}"
+      class="btn btn-sm fw-bold"
+      style="background:#fee2e2;color:#dc2626;border-radius:20px;
+      font-size:0.8rem;border:1px solid #fecaca">
+    ✕ Cancel
+  </a>
+{% endif %}
+        {% if user.is_student %}
+          {% if booking.status == 'completed' %}
+            {% if not booking.review %}
+              <a href="{% url 'leave_review' booking.pk %}"
+                  class="btn btn-sm fw-bold"
+                  style="background:#FCCE90;color:#CE6385;border-radius:20px;
+                  font-size:0.8rem">
+                ⭐ Review
+              </a>
+            {% else %}
+              <span style="font-size:0.8rem;color:#4CAFAE;font-weight:600">
+                ✅ Reviewed
+              </span>
+            {% endif %}
+          {% endif %}
+        {% endif %}
+      </div>
+
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+{% else %}
+<div class="text-center py-5">
+  <div style="font-size:5rem;margin-bottom:16px">📭</div>
+  <h4 class="fw-bold" style="color:#CE6385">No bookings yet</h4>
+  <p class="text-muted mb-4">
+    {% if user.is_student %}
+      Find a tutor and book your first session!
+    {% else %}
+      Students will appear here once they book with you.
+    {% endif %}
+  </p>
+  {% if user.is_student %}
+    <a href="{% url 'tutor_list' %}" class="btn btn-primary px-5">
+      Find a Tutor →
+    </a>
+  {% endif %}
+</div>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,365 @@
+{% extends 'base.html' %}
+{% block title %}Messages{% endblock %}
+
+{% block content %}
+<style>
+  .msg-page { height: calc(100vh - 80px); display: flex; gap: 0; margin: 0; padding: 0; }
+
+  /* Sidebar */
+  .msg-sidebar {
+    width: 300px; flex-shrink: 0;
+    background: #fff;
+    border-right: 1px solid #f0d0d8;
+    display: flex; flex-direction: column;
+    height: 100%;
+  }
+  .sidebar-head {
+    padding: 20px 16px 14px;
+    border-bottom: 1px solid #f0d0d8;
+    background: linear-gradient(135deg, #CE6385, #b85575);
+  }
+  .sidebar-head h5 {
+    font-family: 'Satisfy', cursive;
+    color: #fff; font-size: 22px; margin: 0 0 12px;
+  }
+  .msg-search {
+    display: flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,0.2);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 10px; padding: 8px 12px;
+  }
+  .msg-search i { color: #fff; font-size: 14px; }
+  .msg-search input {
+    border: none; outline: none; background: transparent;
+    font-size: 13px; color: #fff; width: 100%;
+  }
+  .msg-search input::placeholder { color: rgba(255,255,255,0.7); }
+  .conv-list { overflow-y: auto; flex: 1; }
+  .conv-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 16px;
+    border-bottom: 1px solid #fae8ec;
+    text-decoration: none; color: inherit;
+    transition: background 0.15s;
+  }
+  .conv-item:hover { background: #fff5f8; }
+  .conv-item.active { background: #fef0f4; border-left: 3px solid #CE6385; }
+  .conv-avatar {
+    width: 42px; height: 42px; border-radius: 50%;
+    background: #F8D0D0; color: #CE6385;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 600; font-size: 14px; flex-shrink: 0;
+  }
+  .conv-info { flex: 1; min-width: 0; }
+  .conv-name { font-size: 14px; font-weight: 600; margin: 0; color: #333; }
+  .conv-preview { font-size: 12px; color: #999; margin: 2px 0 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .conv-meta { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+  .conv-time { font-size: 11px; color: #bbb; }
+  .unread-badge {
+    background: #CE6385; color: #fff;
+    border-radius: 10px; font-size: 11px;
+    font-weight: 600; padding: 1px 7px;
+  }
+  .no-conv { padding: 30px 16px; text-align: center; color: #bbb; font-size: 13px; }
+
+  /* Chat area */
+  .chat-area {
+    flex: 1; display: flex; flex-direction: column;
+    background: #fffafb; height: 100%; overflow: hidden;
+  }
+  .chat-topbar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 20px;
+    border-bottom: 1px solid #f0d0d8;
+    background: #fff; flex-shrink: 0;
+  }
+  .chat-peer { display: flex; align-items: center; gap: 12px; }
+  .chat-peer-name { font-size: 15px; font-weight: 600; margin: 0; color: #333; }
+  .chat-peer-role { font-size: 12px; color: #4CAFAE; margin: 2px 0 0; }
+  .btn-book-chat {
+    background: linear-gradient(135deg, #4CAFAE, #3a9b9d);
+    color: #fff; border: none; border-radius: 10px;
+    padding: 8px 18px; font-size: 13px; font-weight: 600;
+    text-decoration: none; display: inline-block;
+    transition: opacity 0.2s;
+  }
+  .btn-book-chat:hover { opacity: 0.9; color: #fff; }
+
+  /* Messages */
+  .messages-scroll {
+    flex: 1; overflow-y: auto;
+    padding: 20px; display: flex;
+    flex-direction: column; gap: 14px;
+  }
+  .date-divider {
+    text-align: center; font-size: 12px; color: #bbb;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .date-divider::before, .date-divider::after {
+    content: ''; flex: 1; height: 1px; background: #f0d0d8;
+  }
+  .bubble-wrap { display: flex; gap: 8px; max-width: 72%; }
+  .bubble-wrap.sent { align-self: flex-end; flex-direction: row-reverse; }
+  .bubble-avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: #F8D0D0; color: #CE6385;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 600;
+    flex-shrink: 0; margin-top: 4px;
+  }
+  .bubble {
+    padding: 10px 14px; border-radius: 16px;
+    font-size: 14px; line-height: 1.5;
+    word-break: break-word; max-width: 100%;
+  }
+  .bubble-wrap.received .bubble {
+    background: #fff; border: 1px solid #f0d0d8;
+    border-bottom-left-radius: 4px; color: #333;
+  }
+  .bubble-wrap.sent .bubble {
+    background: linear-gradient(135deg, #4CAFAE, #3a9b9d);
+    color: #fff; border-bottom-right-radius: 4px;
+  }
+  .bubble-time { font-size: 11px; color: #bbb; margin-top: 4px; }
+  .bubble-wrap.sent .bubble-time { text-align: right; }
+
+  /* Input */
+  .chat-input-bar {
+    border-top: 1px solid #f0d0d8;
+    padding: 14px 20px;
+    display: flex; gap: 10px; align-items: flex-end;
+    background: #fff; flex-shrink: 0;
+  }
+  .chat-input-bar textarea {
+    flex: 1; border: 1px solid #F8D0D0;
+    border-radius: 12px; padding: 10px 14px;
+    font-size: 14px; resize: none; max-height: 120px;
+    background: #fffafb; font-family: 'DM Sans', sans-serif;
+    outline: none; line-height: 1.5;
+  }
+  .chat-input-bar textarea:focus { border-color: #EB98B4; }
+  .btn-send {
+    width: 44px; height: 44px;
+    background: linear-gradient(135deg, #CE6385, #b85575);
+    color: #fff; border: none; border-radius: 12px;
+    cursor: pointer; font-size: 18px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    transition: opacity 0.2s;
+  }
+  .btn-send:hover { opacity: 0.9; }
+  .btn-attach {
+    width: 44px; height: 44px; background: #fff;
+    border: 1px solid #F8D0D0; border-radius: 12px;
+    cursor: pointer; color: #CE6385; font-size: 16px;
+    flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+  }
+  .btn-attach:hover { background: #fff5f8; }
+
+  /* Empty state */
+  .chat-empty {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    color: #ccc; gap: 12px;
+  }
+  .chat-empty i { font-size: 48px; color: #F8D0D0; }
+  .chat-empty p { font-size: 15px; color: #bbb; margin: 0; }
+</style>
+
+<div class="msg-page">
+
+  <!-- Sidebar -->
+  <aside class="msg-sidebar">
+    <div class="sidebar-head">
+      <h5>Messages</h5>
+      <div class="msg-search">
+        <i class="bi bi-search"></i>
+        <input type="text" id="searchInput" placeholder="Search conversations...">
+      </div>
+    </div>
+    <div class="conv-list" id="convList">
+      {% for c in conversations %}
+      <a href="{% url 'messaging:conversation' c.conversation.pk %}"
+         class="conv-item {% if conversation and conversation.pk == c.conversation.pk %}active{% endif %}">
+        <div class="conv-avatar">
+          {{ c.other_user.first_name.0|upper }}{{ c.other_user.last_name.0|upper }}
+        </div>
+        <div class="conv-info">
+          <p class="conv-name">{{ c.other_user.get_full_name }}</p>
+          <p class="conv-preview">
+            {% if c.last_message %}{{ c.last_message.body|truncatechars:38 }}{% else %}No messages yet{% endif %}
+          </p>
+        </div>
+        <div class="conv-meta">
+          {% if c.last_message %}<span class="conv-time">{{ c.last_message.created_at|timesince|truncatewords:2 }}</span>{% endif %}
+          {% if c.unread_count %}<span class="unread-badge">{{ c.unread_count }}</span>{% endif %}
+        </div>
+      </a>
+      {% empty %}
+      <div class="no-conv">
+        <i class="bi bi-chat-dots" style="font-size:32px;color:#F8D0D0;display:block;margin-bottom:8px;"></i>
+        No conversations yet
+      </div>
+      {% endfor %}
+    </div>
+  </aside>
+
+  <!-- Chat main -->
+  <section class="chat-area">
+    {% if conversation %}
+
+    <div class="chat-topbar">
+      <div class="chat-peer">
+        <div class="conv-avatar" style="width:46px;height:46px;font-size:15px;">
+          {{ other_user.first_name.0|upper }}{{ other_user.last_name.0|upper }}
+        </div>
+        <div>
+          <p class="chat-peer-name">{{ other_user.get_full_name }}</p>
+          <p class="chat-peer-role"><i class="bi bi-patch-check-fill"></i> Verified Tutor</p>
+        </div>
+      </div>
+      <a href="{% url 'book_session' other_user.pk %}" class="btn-book-chat">
+        <i class="bi bi-calendar-check"></i> Book a session
+      </a>
+    </div>
+
+    <div class="messages-scroll" id="messagesScroll">
+      <div class="date-divider">Today</div>
+      {% for message in messages %}
+      <div class="bubble-wrap {% if message.sender == request.user %}sent{% else %}received{% endif %}"
+           id="msg-{{ message.pk }}">
+        {% if message.sender != request.user %}
+        <div class="bubble-avatar">
+          {{ message.sender.first_name.0|upper }}{{ message.sender.last_name.0|upper }}
+        </div>
+        {% endif %}
+        <div>
+          <div class="bubble">{{ message.body }}</div>
+          {% if message.attachment %}
+          <a href="{{ message.attachment.url }}" target="_blank"
+             style="font-size:12px;color:#4CAFAE;display:block;margin-top:4px;">
+            <i class="bi bi-paperclip"></i> Attachment
+          </a>
+          {% endif %}
+          <div class="bubble-time">{{ message.created_at|time:"g:i A" }}</div>
+        </div>
+      </div>
+      {% empty %}
+      <div style="text-align:center;color:#bbb;font-size:13px;margin-top:20px;">
+        No messages yet — say hello!
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="chat-input-bar">
+      <label for="attachFile" class="btn-attach" title="Attach file">
+        <i class="bi bi-paperclip"></i>
+        <input type="file" id="attachFile" style="display:none;" accept=".pdf,.png,.jpg,.docx">
+      </label>
+      <textarea id="msgInput" rows="1" placeholder="Type a message..."></textarea>
+      <button class="btn-send" id="sendBtn" title="Send">
+        <i class="bi bi-send-fill"></i>
+      </button>
+    </div>
+
+    {% else %}
+    <div class="chat-empty">
+      <i class="bi bi-chat-heart"></i>
+      <p>Select a conversation to get started</p>
+    </div>
+    {% endif %}
+  </section>
+</div>
+
+<script>
+const SEND_URL = "{% if conversation %}{% url 'messaging:send' conversation.pk %}{% endif %}";
+const POLL_URL = "{% if conversation %}{% url 'messaging:poll' conversation.pk %}{% endif %}";
+const CSRF = "{{ csrf_token }}";
+
+function scrollBottom() {
+  const el = document.getElementById('messagesScroll');
+  if (el) el.scrollTop = el.scrollHeight;
+}
+scrollBottom();
+
+const textarea = document.getElementById('msgInput');
+if (textarea) {
+  textarea.addEventListener('input', () => {
+    textarea.style.height = 'auto';
+    textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
+  });
+  textarea.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+  });
+}
+
+document.getElementById('sendBtn')?.addEventListener('click', sendMessage);
+
+async function sendMessage() {
+  const body = textarea.value.trim();
+  const fileInput = document.getElementById('attachFile');
+  if (!body && !fileInput.files.length) return;
+
+  const formData = new FormData();
+  formData.append('body', body);
+  formData.append('csrfmiddlewaretoken', CSRF);
+  if (fileInput.files[0]) formData.append('attachment', fileInput.files[0]);
+
+  textarea.value = '';
+  textarea.style.height = 'auto';
+  fileInput.value = '';
+
+  const res = await fetch(SEND_URL, { method: 'POST', body: formData });
+  const data = await res.json();
+  if (data.error) { alert(data.error); return; }
+
+  const scroll = document.getElementById('messagesScroll');
+  const div = document.createElement('div');
+  div.className = 'bubble-wrap sent';
+  div.id = 'msg-' + data.id;
+  div.innerHTML = `
+    <div>
+      <div class="bubble">${data.body}</div>
+      ${data.attachment_url ? `<a href="${data.attachment_url}" target="_blank" style="font-size:12px;color:#fff;display:block;margin-top:4px;"><i class="bi bi-paperclip"></i> Attachment</a>` : ''}
+      <div class="bubble-time">${data.created_at}</div>
+    </div>`;
+  scroll.appendChild(div);
+  scrollBottom();
+}
+
+// Sidebar search
+document.getElementById('searchInput')?.addEventListener('input', function() {
+  const q = this.value.toLowerCase();
+  document.querySelectorAll('.conv-item').forEach(el => {
+    el.style.display = el.querySelector('.conv-name').textContent.toLowerCase().includes(q) ? '' : 'none';
+  });
+});
+
+// Poll for new messages
+{% if conversation %}
+let lastId = {% if messages %}{{ messages.last.pk }}{% else %}0{% endif %};
+setInterval(async () => {
+  const res = await fetch(`${POLL_URL}?after=${lastId}`, {
+    headers: { 'X-CSRFToken': CSRF }
+  });
+  const data = await res.json();
+  data.messages.forEach(msg => {
+    lastId = msg.id;
+    const scroll = document.getElementById('messagesScroll');
+    const div = document.createElement('div');
+    div.className = 'bubble-wrap received';
+    div.id = 'msg-' + msg.id;
+    const initials = msg.sender_name.split(' ').map(n => n[0] || '').join('').toUpperCase();
+    div.innerHTML = `
+      <div class="bubble-avatar">${initials}</div>
+      <div>
+        <div class="bubble">${msg.body}</div>
+        ${msg.attachment_url ? `<a href="${msg.attachment_url}" target="_blank" style="font-size:12px;color:#4CAFAE;display:block;margin-top:4px;"><i class="bi bi-paperclip"></i> Attachment</a>` : ''}
+        <div class="bubble-time">${msg.created_at}</div>
+      </div>`;
+    scroll.appendChild(div);
+    scroll.scrollTop = scroll.scrollHeight;
+  });
+}, 5000);
+{% endif %}
+</script>
+{% endblock %}

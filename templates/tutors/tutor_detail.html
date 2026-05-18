@@ -1,0 +1,509 @@
+{% extends 'base.html' %}
+{% block title %}{{ tutor.user.username }}'s Profile{% endblock %}
+ 
+{% block content %}
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap');
+ 
+  :root {
+    /* Pink — matches the navbar/header color */
+    --pink-50:  #fdf0f4;
+    --pink-100: #fad5e2;
+    --pink-300: #f093b4;
+    --pink-400: #e8698e;
+    --pink-500: #c9496b;
+    --pink-600: #b03460;
+    --pink-700: #8f2050;
+ 
+    /* Teal — #4CAFAE family */
+    --teal-50:  #f0fafa;
+    --teal-100: #d0eeee;
+    --teal-200: #a5dede;
+    --teal-400: #4CAFAE;
+    --teal-500: #3d9b9c;
+    --teal-600: #2e8788;
+    --teal-700: #1f6e6f;
+    --teal-800: #165859;
+    --teal-900: #0d3b3c;
+ 
+    --lavender-50:  #f2f3fb;
+    --lavender-100: #e6e8f7;
+    --lavender-200: #ced1f0;
+ 
+    --cream: #f2f3fb;
+    --ink:   #1a1f3a;
+  }
+ 
+  body { background: var(--cream); font-family: 'DM Sans', sans-serif; }
+ 
+  /* Remove any default top spacing so no white line appears above hero */
+  .tutor-hero { margin-top: 0; }
+ 
+  /* ── Hero banner with doodles ── */
+  .tutor-hero {
+    position: relative;
+    background: linear-gradient(135deg, #fad5e2 0%, #f5b8cf 60%, #f0a0be 100%);
+    border-radius: 24px;
+    padding: 48px 40px 32px;
+    margin-bottom: 32px;
+    overflow: hidden;
+  }
+ 
+  .doodle-bg {
+    position: absolute; inset: 0; pointer-events: none; overflow: hidden;
+  }
+ 
+  /* ── Profile card ── */
+  .profile-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 32px 24px;
+    box-shadow: 0 4px 24px rgba(201,73,107,0.10);
+    border: 1.5px solid var(--pink-100);
+    position: relative;
+    text-align: center;
+  }
+ 
+  .avatar-ring {
+    width: 110px; height: 110px;
+    border-radius: 50%;
+    border: 4px solid var(--pink-400);
+    box-shadow: 0 0 0 6px var(--pink-100);
+    object-fit: cover;
+    display: block;
+    margin: 0 auto 16px;
+  }
+ 
+  .avatar-initials {
+    width: 110px; height: 110px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--pink-500), var(--pink-700));
+    color: #fff;
+    font-size: 2.5rem;
+    font-weight: 700;
+    font-family: 'Playfair Display', serif;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 16px;
+    border: 4px solid var(--pink-400);
+    box-shadow: 0 0 0 6px var(--pink-100);
+  }
+ 
+  .tutor-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+ 
+  .rate-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--teal-400), var(--teal-600));
+    color: #fff;
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 6px 20px;
+    border-radius: 40px;
+    margin-bottom: 12px;
+    letter-spacing: 0.02em;
+    box-shadow: 0 2px 8px rgba(76,175,174,0.30);
+  }
+ 
+  .rating-row {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    font-size: 0.9rem; color: var(--teal-800); margin-bottom: 16px;
+  }
+  .stars { color: #f59e0b; font-size: 1.1rem; }
+ 
+  .btn-book {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(135deg, var(--teal-400), var(--teal-600));
+    color: #fff;
+    border: none;
+    border-radius: 14px;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    text-align: center;
+    margin-top: 16px;
+    transition: transform .15s, box-shadow .15s;
+    box-shadow: 0 4px 14px rgba(76,175,174,0.35);
+  }
+  .btn-book:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(76,175,174,0.45);
+    color: #fff;
+    text-decoration: none;
+  }
+ 
+  /* ── Info cards ── */
+  .info-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 28px;
+    margin-bottom: 20px;
+    border: 1.5px solid var(--lavender-200);
+    box-shadow: 0 2px 12px rgba(76,175,174,0.07);
+    position: relative;
+    overflow: hidden;
+  }
+  .info-card::before {
+    content: '';
+    position: absolute; left: 0; top: 0; bottom: 0;
+    width: 5px;
+    background: linear-gradient(to bottom, var(--pink-400), var(--pink-600));
+    border-radius: 5px 0 0 5px;
+  }
+ 
+  .card-heading {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--teal-800);
+    margin-bottom: 12px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .card-heading-icon {
+    width: 32px; height: 32px;
+    background: var(--pink-50);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem;
+  }
+ 
+  .subject-badge {
+    display: inline-block;
+    background: var(--teal-400);
+    color: #fff;
+    font-size: 0.82rem;
+    font-weight: 600;
+    padding: 5px 14px;
+    border-radius: 30px;
+    margin: 4px 4px 4px 0;
+    border: none;
+    transition: background .15s;
+    width: calc(100% - 8px);
+    text-align: center;
+  }
+  .subject-badge:hover {
+    background: var(--teal-600); color: #fff;
+  }
+ 
+  /* ── Reviews ── */
+  .reviews-section {
+    background: #fff;
+    border-radius: 20px;
+    padding: 32px;
+    margin-top: 24px;
+    border: 1.5px solid var(--lavender-200);
+    box-shadow: 0 2px 12px rgba(76,175,174,0.07);
+    position: relative;
+    overflow: hidden;
+  }
+ 
+  .review-item {
+    display: flex; gap: 16px;
+    padding: 20px 0;
+    border-bottom: 1px dashed var(--teal-100);
+  }
+  .review-item:last-child { border-bottom: none; }
+ 
+  .reviewer-avatar {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--pink-400), var(--pink-600));
+    color: #fff;
+    font-weight: 700;
+    font-size: 1rem;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    font-family: 'Playfair Display', serif;
+  }
+ 
+  .review-comment {
+    background: var(--teal-50);
+    border-left: 3px solid var(--teal-400);
+    border-radius: 0 12px 12px 0;
+    padding: 12px 16px;
+    font-size: 0.9rem;
+    color: #374151;
+    line-height: 1.7;
+    font-style: italic;
+    margin-top: 6px;
+  }
+ 
+  .doodle-corner {
+    position: absolute;
+    opacity: 0.10;
+    pointer-events: none;
+  }
+</style>
+ 
+<!-- ═══════════════════════════════════════════
+     HERO BANNER WITH SVG DOODLES
+════════════════════════════════════════════ -->
+<div class="tutor-hero">
+  <div class="doodle-bg">
+    <svg width="100%" height="100%" viewBox="0 0 900 220" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      <!-- Books stack -->
+      <g opacity="0.18" fill="none" stroke="#8f2050" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="30" y="80" width="60" height="10" rx="2"/>
+        <rect x="25" y="70" width="65" height="10" rx="2"/>
+        <rect x="32" y="60" width="58" height="10" rx="2"/>
+        <line x1="60" y1="60" x2="60" y2="40"/>
+        <path d="M52 40 Q60 30 68 40"/>
+      </g>
+      <!-- Pencil -->
+      <g opacity="0.15" fill="none" stroke="#8f2050" stroke-width="2" stroke-linecap="round">
+        <line x1="140" y1="30" x2="160" y2="110"/>
+        <path d="M138 26 L144 20 L162 106 L156 112 Z" stroke="#8f2050" fill="none"/>
+        <path d="M156 112 L160 120 L162 106 Z" fill="#8f2050" stroke="none" opacity="0.3"/>
+      </g>
+      <!-- Stars scattered -->
+      <g opacity="0.22" fill="#8f2050">
+        <text x="200" y="50" font-size="22" font-family="sans-serif">✦</text>
+        <text x="820" y="60" font-size="18" font-family="sans-serif">✦</text>
+        <text x="750" y="140" font-size="14" font-family="sans-serif">✦</text>
+        <text x="400" y="30" font-size="12" font-family="sans-serif">✦</text>
+      </g>
+      <!-- Graduation cap -->
+      <g opacity="0.16" transform="translate(820, 40)" fill="none" stroke="#8f2050" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <ellipse cx="30" cy="28" rx="22" ry="8"/>
+        <polygon points="30,4 52,20 30,28 8,20" stroke="#8f2050" fill="none"/>
+        <line x1="52" y1="20" x2="52" y2="42"/>
+        <path d="M49 42 Q52 48 55 42"/>
+      </g>
+      <!-- Lightbulb -->
+      <g opacity="0.14" transform="translate(700, 20)" fill="none" stroke="#8f2050" stroke-width="2" stroke-linecap="round">
+        <path d="M25 10 Q25 0 35 0 Q45 0 45 10 Q45 18 38 24 L38 32 L32 32 L32 24 Q25 18 25 10Z"/>
+        <line x1="32" y1="32" x2="38" y2="32"/>
+        <line x1="32" y1="36" x2="38" y2="36"/>
+        <line x1="35" y1="0" x2="35" y2="-8"/>
+        <line x1="45" y1="4" x2="52" y2="-2"/>
+        <line x1="25" y1="4" x2="18" y2="-2"/>
+      </g>
+      <!-- Wavy line decoration -->
+      <path d="M0 180 Q150 160 300 180 Q450 200 600 175 Q750 150 900 170" fill="none" stroke="#8f2050" stroke-width="1.5" stroke-dasharray="6 4" opacity="0.12"/>
+      <!-- Dots + Atom -->
+      <g opacity="0.18" fill="#8f2050">
+        <circle cx="580" cy="40" r="4"/>
+        <circle cx="600" cy="55" r="3"/>
+        <circle cx="565" cy="58" r="2.5"/>
+        <circle cx="620" cy="35" r="2"/>
+        <ellipse cx="480" cy="60" rx="28" ry="10" fill="none" stroke="#8f2050" stroke-width="2"/>
+        <ellipse cx="480" cy="60" rx="28" ry="10" fill="none" stroke="#8f2050" stroke-width="2" transform="rotate(60,480,60)"/>
+        <ellipse cx="480" cy="60" rx="28" ry="10" fill="none" stroke="#8f2050" stroke-width="2" transform="rotate(120,480,60)"/>
+        <circle cx="480" cy="60" r="4" fill="#8f2050"/>
+      </g>
+      <!-- Dashed circle -->
+      <circle cx="350" cy="110" r="45" fill="none" stroke="#8f2050" stroke-width="1.5" stroke-dasharray="5 5" opacity="0.10"/>
+      <!-- Ruler -->
+      <g opacity="0.13" fill="none" stroke="#8f2050" stroke-width="1.5" stroke-linecap="round">
+        <rect x="240" y="150" width="120" height="22" rx="3"/>
+        {% for i in "0123456789" %}
+          <line x1="{{ 248|add:forloop.counter0|add:forloop.counter0|add:forloop.counter0|add:forloop.counter0|add:forloop.counter0|add:forloop.counter0|add:forloop.counter0|add:forloop.counter0|add:forloop.counter0|add:forloop.counter0 }}" y1="150" x2="{{ 248|add:forloop.counter0|add:forloop.counter0|add:forloop.counter0|add:forloop.counter0|add:forloop.counter0|add:forloop.counter0|add:forloop.counter0|add:forloop.counter0|add:forloop.counter0|add:forloop.counter0 }}" y2="158"/>
+        {% endfor %}
+      </g>
+    </svg>
+  </div>
+ 
+  <!-- Hero text -->
+  <div style="position:relative; z-index:1;">
+    <p style="font-size:0.8rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--pink-700);font-weight:600;margin-bottom:4px;">Tutor Profile</p>
+    <h1 style="font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:700;color:var(--ink);margin:0 0 6px;">
+      {{ tutor.user.username }}
+    </h1>
+    <p style="color:var(--pink-600);font-size:1rem;margin:0;">
+      Expert tutor · 
+      {% for subject in tutor.subjects.all %}{{ subject.name }}{% if not forloop.last %}, {% endif %}{% empty %}Various subjects{% endfor %}
+    </p>
+  </div>
+</div>
+ 
+<!-- ═══════════════════════════════════════════
+     MAIN CONTENT GRID
+════════════════════════════════════════════ -->
+<div class="row g-4">
+ 
+  <!-- ── LEFT: Profile Card ── -->
+  <div class="col-md-4">
+    <div class="profile-card">
+ 
+      <!-- Tiny doodle corner in card -->
+      <svg class="doodle-corner" style="top:8px;right:8px;width:60px;height:60px;" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M10 50 Q30 10 50 10" stroke="#c9496b" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.5"/>
+        <circle cx="50" cy="10" r="3" fill="#c9496b" opacity="0.4"/>
+        <circle cx="10" cy="50" r="2" fill="#c9496b" opacity="0.3"/>
+      </svg>
+ 
+      {% if tutor.profile_pic %}
+        <img src="{{ tutor.profile_pic.url }}" class="avatar-ring" alt="{{ tutor.user.username }}">
+      {% else %}
+        <div class="avatar-initials">{{ tutor.user.username|first|upper }}</div>
+      {% endif %}
+ 
+      <div class="tutor-name">{{ tutor.user.username }}</div>
+      <div class="rate-badge">💵 ${{ tutor.hourly_rate }}/hr</div>
+ 
+      <div class="rating-row">
+        <span class="stars">★★★★★</span>
+        <span>{{ tutor.rating }} / 5.0</span>
+      </div>
+ 
+      <!-- Quick stats row -->
+      <div style="display:flex;gap:8px;justify-content:center;margin-bottom:12px;">
+        <div style="flex:1;background:var(--teal-50);border-radius:12px;padding:10px 4px;border:1px solid var(--teal-100);text-align:center;">
+          <div style="font-size:1.2rem;font-weight:700;color:var(--teal-600);">{{ tutor.subjects.count }}</div>
+          <div style="font-size:0.72rem;color:var(--teal-500);font-weight:500;">Subjects</div>
+        </div>
+        <div style="flex:1;background:var(--teal-50);border-radius:12px;padding:10px 4px;border:1px solid var(--teal-100);text-align:center;">
+          <div style="font-size:1.2rem;font-weight:700;color:var(--teal-600);">{{ tutor.rating|floatformat:1 }}</div>
+          <div style="font-size:0.72rem;color:var(--teal-500);font-weight:500;">Rating</div>
+        </div>
+        <div style="flex:1;background:var(--teal-50);border-radius:12px;padding:10px 4px;border:1px solid var(--teal-100);text-align:center;">
+          <div style="font-size:1.2rem;font-weight:700;color:var(--teal-600);">{{ tutor.bookings_received.count }}</div>
+          <div style="font-size:0.72rem;color:var(--teal-500);font-weight:500;">Sessions</div>
+        </div>
+      </div>
+ 
+      {% if user.is_authenticated and user != tutor.user %}
+<div class="d-grid gap-2 mt-3">
+ 
+  <a href="{% url 'book_session' tutor.user.pk %}"
+     class="btn btn-lg"
+     style="background: linear-gradient(135deg, #4CAFAE, #3a9b9d); color:#fff; border:none; border-radius:12px; font-weight:600;">
+    <i class="bi bi-calendar-check me-2"></i>Book a Session
+  </a>
+ 
+  <a href="{% url 'messaging:start' tutor.user.pk %}"
+     class="btn btn-outline-lg d-flex align-items-center justify-content-center gap-2"
+     style="border: 2px solid #CE6385; color:#CE6385; border-radius:12px; font-weight:600; padding:10px; text-decoration:none; transition: all 0.2s;"
+     onmouseover="this.style.background='#CE6385';this.style.color='#fff'"
+     onmouseout="this.style.background='transparent';this.style.color='#CE6385'">
+    <i class="bi bi-chat-heart-fill"></i> Message this tutor
+  </a>
+ 
+</div>
+{% elif not user.is_authenticated %}
+<div class="d-grid gap-2 mt-3">
+  <a href="{% url 'login' %}?next={{ request.path }}"
+     class="btn"
+     style="background:#CE6385;color:#fff;border-radius:12px;font-weight:600;">
+    Log in to message or book
+  </a>
+</div>
+{% endif %}
+ 
+    </div>
+ 
+    <!-- Decorative illustration card -->
+    <div style="background:#fff;border-radius:20px;padding:20px;margin-top:16px;border:1.5px solid var(--teal-100);box-shadow:0 2px 12px rgba(76,175,174,0.08);text-align:center;">
+      <svg viewBox="0 0 200 120" width="100%" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="100" cy="100" rx="80" ry="10" fill="#fad5e2" opacity="0.5"/>
+        <path d="M30 20 Q100 15 100 90 Q60 90 30 90 Z" fill="#fad5e2" stroke="#c9496b" stroke-width="1.5"/>
+        <path d="M170 20 Q100 15 100 90 Q140 90 170 90 Z" fill="#fdf0f4" stroke="#c9496b" stroke-width="1.5"/>
+        <line x1="100" y1="15" x2="100" y2="90" stroke="#c9496b" stroke-width="2"/>
+        <line x1="45" y1="40" x2="90" y2="38" stroke="#f093b4" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="43" y1="52" x2="88" y2="50" stroke="#f093b4" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="45" y1="64" x2="86" y2="62" stroke="#f093b4" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="112" y1="38" x2="155" y2="40" stroke="#f093b4" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="114" y1="50" x2="157" y2="52" stroke="#f093b4" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="116" y1="62" x2="155" y2="64" stroke="#f093b4" stroke-width="1.5" stroke-linecap="round"/>
+        <text x="95" y="12" font-size="14" fill="#f59e0b" font-family="sans-serif">★</text>
+      </svg>
+      <p style="font-size:0.78rem;color:var(--pink-600);margin:0;font-weight:500;">Ready to learn something new?</p>
+    </div>
+  </div>
+ 
+  <!-- ── RIGHT: Info Cards ── -->
+  <div class="col-md-8">
+ 
+    <!-- About Me -->
+    <div class="info-card">
+      <div class="card-heading">
+        <div class="card-heading-icon">🧑‍🏫</div> About Me
+      </div>
+      <p style="color:#374151;line-height:1.8;margin:0;">{{ tutor.bio|default:"No bio added yet." }}</p>
+    </div>
+ 
+    <!-- Subjects -->
+    <div class="info-card">
+      <div class="card-heading">
+        <div class="card-heading-icon">📚</div> Subjects I Teach
+      </div>
+      {% for subject in tutor.subjects.all %}
+        <span class="subject-badge">{{ subject.name }}</span>
+      {% empty %}
+        <p style="color:#9ca3af;margin:0;">No subjects added yet.</p>
+      {% endfor %}
+    </div>
+ 
+    <!-- Availability -->
+    <div class="info-card" style="margin-bottom:0;">
+      <div class="card-heading">
+        <div class="card-heading-icon">🗓️</div> Availability
+      </div>
+      <p style="color:#374151;line-height:1.8;margin:0;">{{ tutor.availability|default:"Not specified." }}</p>
+    </div>
+ 
+  </div>
+</div>
+ 
+<!-- ═══════════════════════════════════════════
+     REVIEWS SECTION
+════════════════════════════════════════════ -->
+<div class="reviews-section">
+  <!-- Doodle decoration top-right -->
+  <svg class="doodle-corner" style="top:12px;right:16px;width:90px;height:90px;opacity:0.12;" viewBox="0 0 90 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="45" cy="45" r="35" stroke="#4CAFAE" stroke-width="1.5" stroke-dasharray="5 4"/>
+    <circle cx="45" cy="45" r="20" stroke="#4CAFAE" stroke-width="1.5" stroke-dasharray="3 3"/>
+    <circle cx="45" cy="45" r="5" fill="#4CAFAE" opacity="0.4"/>
+  </svg>
+ 
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;flex-wrap:wrap;gap:12px;">
+    <h4 style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;color:var(--teal-800);margin:0;">
+      ⭐ Student Reviews
+    </h4>
+    <span style="background:var(--teal-50);color:var(--teal-800);padding:6px 18px;border-radius:30px;font-size:0.85rem;font-weight:600;border:1px solid var(--teal-200);">
+      {{ tutor.rating|floatformat:1 }} / 5.0
+    </span>
+  </div>
+ 
+  {% for booking in tutor.bookings_received.all %}
+    {% if booking.review %}
+    <div class="review-item">
+      <div class="reviewer-avatar">{{ booking.student.username|first|upper }}</div>
+      <div style="flex:1;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;flex-wrap:wrap;">
+          <span style="font-weight:600;color:var(--ink);font-size:0.95rem;">{{ booking.student.username }}</span>
+          <span style="color:#9ca3af;font-size:0.78rem;">{{ booking.review.created_at|date:"M d, Y" }}</span>
+        </div>
+        <div style="color:#f59e0b;font-size:1.1rem;margin-bottom:6px;">
+          {% for i in "12345" %}
+            {% if forloop.counter <= booking.review.rating %}★{% else %}<span style="color:#e5e7eb;">★</span>{% endif %}
+          {% endfor %}
+          <span style="color:#9ca3af;font-size:0.8rem;margin-left:6px;">({{ booking.review.rating }}/5)</span>
+        </div>
+        {% if booking.review.comment %}
+          <div class="review-comment">"{{ booking.review.comment }}"</div>
+        {% endif %}
+      </div>
+    </div>
+    {% endif %}
+  {% empty %}
+    <div style="text-align:center;padding:40px 20px;">
+      <svg viewBox="0 0 120 80" width="120" style="margin-bottom:12px;opacity:0.35;" xmlns="http://www.w3.org/2000/svg">
+        <rect x="10" y="10" width="100" height="60" rx="12" fill="#fad5e2" stroke="#c9496b" stroke-width="1.5"/>
+        <line x1="25" y1="28" x2="95" y2="28" stroke="#f093b4" stroke-width="2" stroke-linecap="round"/>
+        <line x1="25" y1="40" x2="75" y2="40" stroke="#f093b4" stroke-width="2" stroke-linecap="round"/>
+        <line x1="25" y1="52" x2="85" y2="52" stroke="#f093b4" stroke-width="2" stroke-linecap="round"/>
+        <text x="88" y="68" font-size="18" fill="#f59e0b" font-family="sans-serif">★</text>
+      </svg>
+      <p style="color:#9ca3af;margin:0;font-size:0.95rem;">No reviews yet — be the first to review!</p>
+    </div>
+  {% endfor %}
+</div>
+ 
+{% endblock %}

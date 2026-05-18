@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% block title %}Edit Tutor Profile{% endblock %}
+{% block content %}
+
+<div class="row justify-content-center">
+  <div class="col-md-8">
+
+    <!-- Header -->
+    <div class="text-center mb-4">
+      <h2 style="font-family:'Satisfy',cursive;font-size:2.5rem;color:#CE6385">
+        Edit Your Profile ✏️
+      </h2>
+      <p class="text-muted">Keep your profile updated to attract more students</p>
+    </div>
+
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      <!-- Bio -->
+      <div class="card p-4 mb-3" style="border-radius:20px;border:1px solid #fce8ec">
+        <h5 class="fw-bold mb-3" style="color:#CE6385">📝 About You</h5>
+        <label class="form-label fw-bold small" style="color:#CE6385">Bio</label>
+        {{ form.bio }}
+        {% if form.bio.errors %}
+          <div class="text-danger small mt-1">{{ form.bio.errors }}</div>
+        {% endif %}
+      </div>
+
+      <!-- Hourly Rate -->
+      <div class="card p-4 mb-3" style="border-radius:20px;border:1px solid #fce8ec">
+        <h5 class="fw-bold mb-3" style="color:#CE6385">💰 Hourly Rate</h5>
+        <div class="input-group">
+          <span class="input-group-text" style="background:#fce8ec;border-color:#F8D0D0;color:#CE6385;font-weight:700">$</span>
+          {{ form.hourly_rate }}
+        </div>
+        {% if form.hourly_rate.errors %}
+          <div class="text-danger small mt-1">{{ form.hourly_rate.errors }}</div>
+        {% endif %}
+      </div>
+
+      <!-- Profile Picture -->
+      <div class="card p-4 mb-3" style="border-radius:20px;border:1px solid #fce8ec">
+        <h5 class="fw-bold mb-3" style="color:#CE6385">🖼️ Profile Picture</h5>
+        {{ form.profile_pic }}
+        {% if form.profile_pic.errors %}
+          <div class="text-danger small mt-1">{{ form.profile_pic.errors }}</div>
+        {% endif %}
+      </div>
+
+      <!-- Subjects -->
+      <div class="card p-4 mb-4" style="border-radius:20px;border:1px solid #fce8ec">
+        <h5 class="fw-bold mb-1" style="color:#CE6385">📚 Subjects You Teach</h5>
+        <p class="text-muted small mb-3">Select all subjects you can tutor</p>
+
+        <div class="row g-2">
+          {% for checkbox in form.subjects %}
+          <div class="col-6 col-md-4">
+            <label style="display:flex;align-items:center;gap:10px;
+                background:#fff5f7;border:2px solid #fce8ec;
+                border-radius:12px;padding:10px 14px;cursor:pointer;
+                transition:all 0.2s;font-size:0.9rem;font-weight:500;color:#374151"
+                onmouseover="this.style.borderColor='#4CAFAE'"
+                onmouseout="if(!this.querySelector('input').checked)this.style.borderColor='#fce8ec'"
+                onclick="toggleSubject(this)">
+              {{ checkbox.tag }}
+              <span>{{ checkbox.choice_label }}</span>
+            </label>
+          </div>
+          {% endfor %}
+        </div>
+
+        {% if form.subjects.errors %}
+          <div class="text-danger small mt-2">{{ form.subjects.errors }}</div>
+        {% endif %}
+      </div>
+
+      <!-- Submit -->
+      <div class="text-center">
+        <button type="submit" class="btn btn-primary px-5 py-3 fw-bold"
+            style="border-radius:50px;font-size:1rem">
+          💾 Save Profile
+        </button>
+        <a href="{% url 'dashboard' %}" class="btn btn-outline-primary px-5 py-3 ms-3 fw-bold"
+            style="border-radius:50px;font-size:1rem">
+          Cancel
+        </a>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+<script>
+function toggleSubject(label) {
+  const input = label.querySelector('input');
+  setTimeout(() => {
+    if (input.checked) {
+      label.style.borderColor = '#4CAFAE';
+      label.style.background = '#e6f7f7';
+    } else {
+      label.style.borderColor = '#fce8ec';
+      label.style.background = '#fff5f7';
+    }
+  }, 10);
+}
+
+// On page load, highlight already-selected subjects
+document.querySelectorAll('.col-6 label input[type=checkbox]').forEach(input => {
+  if (input.checked) {
+    const label = input.closest('label');
+    label.style.borderColor = '#4CAFAE';
+    label.style.background = '#e6f7f7';
+  }
+});
+</script>
+
+{% endblock %}

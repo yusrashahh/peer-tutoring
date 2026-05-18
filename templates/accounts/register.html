@@ -1,0 +1,320 @@
+{% extends 'base.html' %}
+{% block title %}Join PeerTutor — Create Account{% endblock %}
+{% block content %}
+
+<div style="min-height:80vh;display:flex;align-items:center;justify-content:center;position:relative">
+
+  <!-- Background doodles -->
+  <svg style="position:fixed;top:100px;right:40px;opacity:0.07;pointer-events:none"
+      width="120" height="120" viewBox="0 0 120 120">
+    <path d="M60 8L63 44L98 60L63 76L60 112L57 76L22 60L57 44Z"
+        stroke="#CE6385" stroke-width="2" fill="none"/>
+  </svg>
+  <svg style="position:fixed;bottom:140px;left:30px;opacity:0.07;pointer-events:none"
+      width="90" height="90" viewBox="0 0 90 90">
+    <circle cx="45" cy="45" r="36" stroke="#4CAFAE" stroke-width="2" fill="none" stroke-dasharray="8 5"/>
+  </svg>
+  <svg style="position:fixed;top:250px;left:60px;opacity:0.06;pointer-events:none"
+      width="70" height="70" viewBox="0 0 70 70">
+    <path d="M35 4 L39 22 L58 22 L44 34 L49 52 L35 41 L21 52 L26 34 L12 22 L31 22Z"
+        stroke="#FCCE90" stroke-width="2" fill="none"/>
+  </svg>
+  <svg style="position:fixed;bottom:250px;right:60px;opacity:0.06;pointer-events:none"
+      width="80" height="80" viewBox="0 0 80 80">
+    <rect x="8" y="8" width="64" height="64" rx="12"
+        stroke="#EB98B4" stroke-width="2" fill="none" transform="rotate(12 40 40)"/>
+  </svg>
+
+  <div class="row w-100 justify-content-center align-items-stretch g-0" style="max-width:960px">
+
+    <!-- Left illustration panel -->
+    <div class="col-md-5 d-none d-md-flex flex-column align-items-center justify-content-center p-5"
+        style="background:linear-gradient(135deg,#4CAFAE,#3a9b9d);
+        border-radius:24px 0 0 24px;min-height:580px;position:relative;overflow:hidden">
+
+      <!-- Blobs -->
+      <div style="position:absolute;width:200px;height:200px;border-radius:50%;
+          background:rgba(255,255,255,0.08);top:-60px;right:-50px"></div>
+      <div style="position:absolute;width:130px;height:130px;border-radius:50%;
+          background:rgba(255,255,255,0.06);bottom:-30px;left:-30px"></div>
+      <div style="position:absolute;width:80px;height:80px;border-radius:50%;
+          background:rgba(255,255,255,0.05);bottom:100px;right:-20px"></div>
+
+      <!-- Illustration: two people studying together -->
+      <svg viewBox="0 0 300 300" width="240" xmlns="http://www.w3.org/2000/svg">
+        <!-- Table -->
+        <rect x="20" y="220" width="260" height="12" rx="6" fill="rgba(255,255,255,0.25)"/>
+        <rect x="40" y="232" width="12" height="50" rx="6" fill="rgba(255,255,255,0.15)"/>
+        <rect x="248" y="232" width="12" height="50" rx="6" fill="rgba(255,255,255,0.15)"/>
+        <!-- Book on table -->
+        <rect x="110" y="195" width="80" height="26" rx="5" fill="rgba(252,206,144,0.6)"/>
+        <line x1="150" y1="195" x2="150" y2="221" stroke="rgba(255,255,255,0.4)" stroke-width="2"/>
+        <line x1="118" y1="204" x2="146" y2="204" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
+        <line x1="118" y1="211" x2="146" y2="211" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
+
+        <!-- Person 1 (left) -->
+        <rect x="30" y="130" width="60" height="95" rx="16" fill="rgba(255,255,255,0.2)"/>
+        <rect x="51" y="108" width="14" height="26" rx="7" fill="#FEE7BC"/>
+        <ellipse cx="58" cy="90" rx="28" ry="30" fill="#FEE7BC"/>
+        <path d="M30 78 Q34 52 58 50 Q82 52 86 78 Q74 62 58 60 Q42 62 30 78Z"
+            fill="#CE6385"/>
+        <path d="M30 78 Q24 88 27 102" fill="#CE6385"/>
+        <path d="M86 78 Q92 88 89 102" fill="#CE6385"/>
+        <ellipse cx="48" cy="88" rx="6" ry="7" fill="#fff" opacity="0.9"/>
+        <ellipse cx="68" cy="88" rx="6" ry="7" fill="#fff" opacity="0.9"/>
+        <circle cx="49" cy="89" r="4" fill="#1e293b"/>
+        <circle cx="69" cy="89" r="4" fill="#1e293b"/>
+        <circle cx="50.5" cy="87.5" r="1.5" fill="#fff"/>
+        <circle cx="70.5" cy="87.5" r="1.5" fill="#fff"/>
+        <ellipse cx="38" cy="96" rx="8" ry="5" fill="#fca5a5" opacity="0.5"/>
+        <ellipse cx="78" cy="96" rx="8" ry="5" fill="#fca5a5" opacity="0.5"/>
+        <path d="M46 104 Q58 112 70 104" stroke="#d97706" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <!-- P1 arms -->
+        <path d="M30 148 Q10 158 8 178" stroke="rgba(255,255,255,0.2)" stroke-width="16" fill="none" stroke-linecap="round"/>
+        <ellipse cx="7" cy="185" rx="11" ry="10" fill="#FEE7BC"/>
+        <path d="M90 148 Q108 155 112 175" stroke="rgba(255,255,255,0.2)" stroke-width="16" fill="none" stroke-linecap="round"/>
+        <ellipse cx="114" cy="182" rx="11" ry="10" fill="#FEE7BC"/>
+
+        <!-- Person 2 (right) -->
+        <rect x="210" y="130" width="60" height="95" rx="16" fill="rgba(255,255,255,0.2)"/>
+        <rect x="231" y="108" width="14" height="26" rx="7" fill="#FEE7BC"/>
+        <ellipse cx="238" cy="90" rx="28" ry="30" fill="#FEE7BC"/>
+        <path d="M210 76 Q215 48 238 46 Q261 48 266 76 Q255 58 238 56 Q221 58 210 76Z"
+            fill="#1e293b"/>
+        <path d="M210 76 Q204 86 207 100" fill="#1e293b"/>
+        <path d="M266 76 Q272 86 269 100" fill="#1e293b"/>
+        <ellipse cx="228" cy="88" rx="6" ry="7" fill="#fff" opacity="0.9"/>
+        <ellipse cx="248" cy="88" rx="6" ry="7" fill="#fff" opacity="0.9"/>
+        <circle cx="229" cy="89" r="4" fill="#1e293b"/>
+        <circle cx="249" cy="89" r="4" fill="#1e293b"/>
+        <circle cx="230.5" cy="87.5" r="1.5" fill="#fff"/>
+        <circle cx="250.5" cy="87.5" r="1.5" fill="#fff"/>
+        <ellipse cx="218" cy="96" rx="8" ry="5" fill="#fca5a5" opacity="0.5"/>
+        <ellipse cx="258" cy="96" rx="8" ry="5" fill="#fca5a5" opacity="0.5"/>
+        <path d="M226 104 Q238 112 250 104" stroke="#d97706" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <!-- P2 arms -->
+        <path d="M210 148 Q192 155 188 175" stroke="rgba(255,255,255,0.2)" stroke-width="16" fill="none" stroke-linecap="round"/>
+        <ellipse cx="186" cy="182" rx="11" ry="10" fill="#FEE7BC"/>
+        <path d="M270 148 Q288 158 292 178" stroke="rgba(255,255,255,0.2)" stroke-width="16" fill="none" stroke-linecap="round"/>
+        <ellipse cx="293" cy="185" rx="11" ry="10" fill="#FEE7BC"/>
+
+        <!-- Speech bubble -->
+        <rect x="108" y="42" width="84" height="34" rx="12" fill="rgba(255,255,255,0.25)"/>
+        <path d="M140 76 L148 86 L156 76Z" fill="rgba(255,255,255,0.25)"/>
+        <text x="150" y="64" text-anchor="middle" style="font-size:11px;fill:#fff;font-weight:600">Let's learn! 🎉</text>
+
+        <!-- Stars -->
+        <path d="M280 48 L281.5 42 L283 48 L289 49.5 L283 51 L281.5 57 L280 51 L274 49.5Z"
+            fill="rgba(252,206,144,0.8)"/>
+        <circle cx="18" cy="60" r="4" fill="rgba(255,255,255,0.4)"/>
+        <circle cx="282" cy="120" r="3" fill="rgba(252,206,144,0.5)"/>
+      </svg>
+
+      <!-- Text -->
+      <div class="text-center mt-3">
+        <h4 style="font-family:'Satisfy',cursive;color:#fff;font-size:1.6rem;margin-bottom:6px">
+          Start Learning Today! 🚀
+        </h4>
+        <p style="color:rgba(255,255,255,0.8);font-size:0.88rem;line-height:1.7;max-width:220px">
+          Join thousands of students connecting with peer tutors every day
+        </p>
+        <!-- Stats -->
+        <div class="d-flex gap-3 justify-content-center mt-3">
+          <div style="background:rgba(255,255,255,0.15);padding:10px 16px;border-radius:14px;text-align:center">
+            <div style="color:#FCCE90;font-weight:800;font-size:1.1rem">50+</div>
+            <div style="color:rgba(255,255,255,0.7);font-size:0.72rem">Tutors</div>
+          </div>
+          <div style="background:rgba(255,255,255,0.15);padding:10px 16px;border-radius:14px;text-align:center">
+            <div style="color:#FCCE90;font-weight:800;font-size:1.1rem">Free</div>
+            <div style="color:rgba(255,255,255,0.7);font-size:0.72rem">To Join</div>
+          </div>
+          <div style="background:rgba(255,255,255,0.15);padding:10px 16px;border-radius:14px;text-align:center">
+            <div style="color:#FCCE90;font-weight:800;font-size:1.1rem">⭐4.9</div>
+            <div style="color:rgba(255,255,255,0.7);font-size:0.72rem">Rated</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right form panel -->
+    <div class="col-md-7 col-12">
+      <div style="background:#fff;border-radius:0 24px 24px 0;
+          padding:44px 44px;min-height:580px;
+          box-shadow:0 20px 60px rgba(76,175,174,0.12)">
+
+        <!-- Logo -->
+        <div class="text-center mb-3">
+          <span style="font-family:'Satisfy',cursive;font-size:1.8rem;color:#4CAFAE">
+            📚 PeerTutor
+          </span>
+        </div>
+
+        <h3 class="fw-bold mb-1" style="color:#1e293b">Create your account</h3>
+        <p class="text-muted mb-4" style="font-size:0.9rem">
+          Already have an account?
+          <a href="{% url 'login' %}" style="color:#CE6385;font-weight:600;text-decoration:none">
+            Sign in →
+          </a>
+        </p>
+
+        {% if form.errors %}
+          <div class="alert py-2 small" style="background:#fff5f7;border:1px solid #fce8ec;color:#CE6385;border-radius:12px">
+            Please fix the errors below.
+          </div>
+        {% endif %}
+
+        <form method="POST">
+          {% csrf_token %}
+
+          <!-- Role selector cards -->
+          <div class="mb-4">
+            <label class="form-label fw-bold small" style="color:#4CAFAE">🎓 I want to join as</label>
+            <div class="row g-2">
+              <div class="col-6">
+                <label id="studentLabel" style="display:block;border:2px solid #fce8ec;
+                    border-radius:14px;padding:14px;cursor:pointer;text-align:center;
+                    transition:all 0.2s;background:#fff5f7">
+                  <input type="radio" name="role" value="student"
+                      style="display:none" checked onchange="selectRole('student')">
+                  <div style="font-size:1.8rem;margin-bottom:4px">👩‍🎓</div>
+                  <div style="font-weight:700;color:#CE6385;font-size:0.9rem">Student</div>
+                  <div style="font-size:0.75rem;color:#9ca3af">I want to learn</div>
+                </label>
+              </div>
+              <div class="col-6">
+                <label id="tutorLabel" style="display:block;border:2px solid #fce8ec;
+                    border-radius:14px;padding:14px;cursor:pointer;text-align:center;
+                    transition:all 0.2s;background:#fff">
+                  <input type="radio" name="role" value="tutor"
+                      style="display:none" onchange="selectRole('tutor')">
+                  <div style="font-size:1.8rem;margin-bottom:4px">👨‍🏫</div>
+                  <div style="font-weight:700;color:#4CAFAE;font-size:0.9rem">Tutor</div>
+                  <div style="font-size:0.75rem;color:#9ca3af">I want to teach</div>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Username -->
+          <div class="mb-3">
+            <label class="form-label fw-bold small" style="color:#CE6385">👤 Username</label>
+            <input type="text" name="username" class="form-control"
+                placeholder="Choose a username"
+                value="{{ form.username.value|default:'' }}"
+                style="border:2px solid #fce8ec;border-radius:12px;padding:11px 16px"
+                onfocus="this.style.borderColor='#4CAFAE'"
+                onblur="this.style.borderColor='#fce8ec'" required>
+            {% if form.username.errors %}
+              <div class="text-danger small mt-1">{{ form.username.errors }}</div>
+            {% endif %}
+          </div>
+
+          <!-- Email -->
+          <div class="mb-3">
+            <label class="form-label fw-bold small" style="color:#CE6385">📧 Email</label>
+            <input type="email" name="email" class="form-control"
+                placeholder="your@email.com"
+                value="{{ form.email.value|default:'' }}"
+                style="border:2px solid #fce8ec;border-radius:12px;padding:11px 16px"
+                onfocus="this.style.borderColor='#4CAFAE'"
+                onblur="this.style.borderColor='#fce8ec'">
+            {% if form.email.errors %}
+              <div class="text-danger small mt-1">{{ form.email.errors }}</div>
+            {% endif %}
+          </div>
+
+          <!-- Password row -->
+          <div class="row g-3 mb-4">
+            <div class="col-6">
+              <label class="form-label fw-bold small" style="color:#CE6385">🔒 Password</label>
+              <input type="password" name="password1" class="form-control"
+                  placeholder="Create password"
+                  style="border:2px solid #fce8ec;border-radius:12px;padding:11px 16px"
+                  onfocus="this.style.borderColor='#4CAFAE'"
+                  onblur="this.style.borderColor='#fce8ec'" required>
+              {% if form.password1.errors %}
+                <div class="text-danger small mt-1">{{ form.password1.errors }}</div>
+              {% endif %}
+            </div>
+            <div class="col-6">
+              <label class="form-label fw-bold small" style="color:#CE6385">🔒 Confirm</label>
+              <input type="password" name="password2" class="form-control"
+                  placeholder="Repeat password"
+                  style="border:2px solid #fce8ec;border-radius:12px;padding:11px 16px"
+                  onfocus="this.style.borderColor='#4CAFAE'"
+                  onblur="this.style.borderColor='#fce8ec'" required>
+              {% if form.password2.errors %}
+                <div class="text-danger small mt-1">{{ form.password2.errors }}</div>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- Submit -->
+          <button type="submit" class="btn w-100 py-3 fw-bold mb-3"
+              style="border-radius:12px;font-size:1rem;border:none;
+              background:linear-gradient(135deg,#4CAFAE,#3a9b9d);
+              color:#fff;letter-spacing:0.3px;transition:all 0.3s"
+              onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 25px rgba(76,175,174,0.4)'"
+              onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none'">
+            Create Account ✨
+          </button>
+
+          <!-- Divider -->
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+            <div style="flex:1;height:1px;background:#fce8ec"></div>
+            <span style="color:#9ca3af;font-size:0.8rem">free forever</span>
+            <div style="flex:1;height:1px;background:#fce8ec"></div>
+          </div>
+
+          <!-- Benefits row -->
+          <div class="row g-2 text-center">
+            <div class="col-4">
+              <div style="background:#fff5f7;border-radius:12px;padding:10px 6px">
+                <div style="font-size:1.2rem">🎓</div>
+                <div style="font-size:0.7rem;color:#6b7280;margin-top:2px">Learn faster</div>
+              </div>
+            </div>
+            <div class="col-4">
+              <div style="background:#f0fffe;border-radius:12px;padding:10px 6px">
+                <div style="font-size:1.2rem">💰</div>
+                <div style="font-size:0.7rem;color:#6b7280;margin-top:2px">Earn money</div>
+              </div>
+            </div>
+            <div class="col-4">
+              <div style="background:#fffbf0;border-radius:12px;padding:10px 6px">
+                <div style="font-size:1.2rem">⭐</div>
+                <div style="font-size:0.7rem;color:#6b7280;margin-top:2px">Top rated</div>
+              </div>
+            </div>
+          </div>
+
+        </form>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// Highlight student role by default
+document.getElementById('studentLabel').style.borderColor = '#CE6385';
+document.getElementById('studentLabel').style.background = '#fff0f4';
+
+function selectRole(role) {
+  const student = document.getElementById('studentLabel');
+  const tutor = document.getElementById('tutorLabel');
+  if (role === 'student') {
+    student.style.borderColor = '#CE6385';
+    student.style.background = '#fff0f4';
+    tutor.style.borderColor = '#fce8ec';
+    tutor.style.background = '#fff';
+  } else {
+    tutor.style.borderColor = '#4CAFAE';
+    tutor.style.background = '#f0fffe';
+    student.style.borderColor = '#fce8ec';
+    student.style.background = '#fff';
+  }
+}
+</script>
+
+{% endblock %}

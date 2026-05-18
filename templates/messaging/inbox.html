@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% block title %}Messages{% endblock %}
+
+{% block content %}
+<style>
+  .inbox-wrap { max-width: 600px; margin: 40px auto; }
+  .inbox-head { margin-bottom: 24px; }
+  .inbox-head h3 { font-family: 'Satisfy', cursive; color: #CE6385; font-size: 2rem; margin: 0; }
+  .conv-card {
+    background: #fff; border-radius: 16px;
+    border: 1.5px solid #f0d0d8;
+    padding: 16px 20px;
+    display: flex; align-items: center; gap: 14px;
+    text-decoration: none; color: inherit;
+    margin-bottom: 12px;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .conv-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(206,99,133,0.12); }
+  .conv-avatar {
+    width: 48px; height: 48px; border-radius: 50%;
+    background: #F8D0D0; color: #CE6385;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 16px; flex-shrink: 0;
+  }
+  .conv-info { flex: 1; min-width: 0; }
+  .conv-name { font-weight: 600; font-size: 15px; color: #333; margin: 0; }
+  .conv-preview { font-size: 13px; color: #999; margin: 3px 0 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .conv-meta { text-align: right; flex-shrink: 0; }
+  .conv-time { font-size: 11px; color: #bbb; display: block; }
+  .unread-badge {
+    background: #CE6385; color: #fff;
+    border-radius: 10px; font-size: 11px;
+    font-weight: 600; padding: 2px 8px;
+    display: inline-block; margin-top: 4px;
+  }
+  .empty-state { text-align: center; padding: 60px 20px; color: #bbb; }
+  .empty-state i { font-size: 48px; color: #F8D0D0; display: block; margin-bottom: 12px; }
+</style>
+
+<div class="inbox-wrap">
+  <div class="inbox-head">
+    <h3><i class="bi bi-chat-heart"></i> Messages</h3>
+    <p style="color:#999;font-size:14px;margin:4px 0 0;">Your conversations with tutors and students</p>
+  </div>
+
+  {% for c in conversations %}
+  <a href="{% url 'messaging:conversation' c.conversation.pk %}" class="conv-card">
+    <div class="conv-avatar">
+      {{ c.other_user.first_name.0|upper }}{{ c.other_user.last_name.0|upper }}
+    </div>
+    <div class="conv-info">
+      <p class="conv-name">{{ c.other_user.get_full_name|default:c.other_user.username }}</p>
+      <p class="conv-preview">
+        {% if c.last_message %}{{ c.last_message.body|truncatechars:50 }}{% else %}No messages yet{% endif %}
+      </p>
+    </div>
+    <div class="conv-meta">
+      {% if c.last_message %}
+      <span class="conv-time">{{ c.last_message.created_at|timesince }} ago</span>
+      {% endif %}
+      {% if c.unread_count %}
+      <span class="unread-badge">{{ c.unread_count }}</span>
+      {% endif %}
+    </div>
+  </a>
+  {% empty %}
+  <div class="empty-state">
+    <i class="bi bi-chat-dots"></i>
+    <p style="font-size:15px;margin:0;">No conversations yet</p>
+    <a href="{% url 'tutor_list' %}" 
+       style="display:inline-block;margin-top:16px;padding:10px 24px;background:#CE6385;color:#fff;border-radius:12px;text-decoration:none;font-weight:600;">
+      Browse tutors to get started
+    </a>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

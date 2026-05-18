@@ -1,0 +1,346 @@
+{% extends 'base.html' %}
+{% block title %}Book Session{% endblock %}
+
+{% block content %}
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap');
+
+  html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  :root {
+    --rose:    #c75c7a;
+    --rose-lt: #e8849e;
+    --teal:    #4ab8a8;
+    --teal-dk: #38a090;
+    --cream:   #fff8f9;
+    --ink:     #2e2535;
+    --muted:   #7d6e78;
+    --lavender:#f0e8f4;
+  }
+
+  /* ── page shell ── */
+  .bk-page {
+    min-height: 100vh;
+    background: var(--lavender);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 1rem;
+    position: relative;
+    overflow: hidden;
+    font-family: 'Nunito', sans-serif;
+  }
+
+  /* ── scattered doodle SVGs ── */
+  .doodle {
+    position: absolute;
+    pointer-events: none;
+    opacity: .55;
+  }
+  .doodle-star   { top: 5%;  left: 3%;  width: 70px; animation: spin 18s linear infinite; }
+  .doodle-pencil { top: 10%; right: 4%; width: 80px; animation: wobble 6s ease-in-out infinite; }
+  .doodle-book   { bottom: 12%; left: 4%; width: 90px; animation: float 7s ease-in-out infinite; }
+  .doodle-bulb   { bottom: 8%;  right: 3%; width: 75px; animation: pulse-doodle 4s ease-in-out infinite; }
+  .doodle-dots   { top: 45%; left: 1%;  width: 55px; opacity: .35; }
+  .doodle-wave   { top: 60%; right: 2%; width: 100px; opacity: .3; }
+
+  @keyframes spin           { to { transform: rotate(360deg); } }
+  @keyframes wobble         { 0%,100%{transform:rotate(-8deg)}50%{transform:rotate(8deg)} }
+  @keyframes float          { 0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)} }
+  @keyframes pulse-doodle   { 0%,100%{transform:scale(1)}50%{transform:scale(1.12)} }
+
+  /* ── card ── */
+  .bk-card {
+    background: var(--cream);
+    border-radius: 28px;
+    box-shadow: 8px 8px 0 var(--rose-lt), 0 20px 60px rgba(0,0,0,.12);
+    padding: 2.8rem 2.6rem 2.2rem;
+    width: 100%;
+    max-width: 520px;
+    position: relative;
+    z-index: 10;
+    animation: card-in .55s cubic-bezier(.34,1.56,.64,1) both;
+  }
+  @keyframes card-in { from{opacity:0;transform:translateY(30px) scale(.96)} to{opacity:1;transform:none} }
+
+  /* ── decorative squiggle at top of card ── */
+  .card-squiggle {
+    position: absolute;
+    top: -22px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 160px;
+  }
+
+  /* ── header ── */
+  .bk-header {
+    text-align: center;
+    margin-bottom: 1.8rem;
+  }
+  .bk-emoji {
+    font-size: 2.6rem;
+    display: block;
+    margin-bottom: .3rem;
+    animation: float 5s ease-in-out infinite;
+  }
+  .bk-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 2.05rem;
+    color: var(--rose);
+    margin: 0 0 .3rem;
+    letter-spacing: .5px;
+  }
+  .bk-sub {
+    color: var(--muted);
+    font-size: .95rem;
+    font-weight: 600;
+  }
+  .bk-sub strong { color: var(--ink); }
+
+  /* ── divider ── */
+  .bk-divider {
+    display: flex;
+    align-items: center;
+    gap: .7rem;
+    margin: 1.4rem 0 1.6rem;
+    color: var(--rose-lt);
+    font-size: .8rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .bk-divider::before, .bk-divider::after {
+    content: '';
+    flex: 1;
+    height: 2px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, transparent, var(--rose-lt));
+  }
+  .bk-divider::after { background: linear-gradient(270deg, transparent, var(--rose-lt)); }
+
+  /* ── form fields ── */
+  .field-wrap { margin-bottom: 1.25rem; position: relative; }
+
+  .field-wrap label {
+    font-weight: 800;
+    font-size: .85rem;
+    color: var(--ink);
+    letter-spacing: .3px;
+    display: block;
+    margin-bottom: .45rem;
+  }
+
+  /* target every Django-rendered input / select / textarea */
+  .field-wrap input,
+  .field-wrap select,
+  .field-wrap textarea {
+    width: 100%;
+    padding: .75rem 1rem .75rem 2.8rem;
+    border: 2.5px solid #e3d8e8;
+    border-radius: 14px;
+    font-family: 'Nunito', sans-serif;
+    font-size: .95rem;
+    color: var(--ink);
+    background: #fff;
+    transition: border-color .2s, box-shadow .2s;
+    outline: none;
+    box-sizing: border-box;
+  }
+  .field-wrap input:focus,
+  .field-wrap select:focus,
+  .field-wrap textarea:focus {
+    border-color: var(--teal);
+    box-shadow: 0 0 0 4px rgba(74,184,168,.15);
+  }
+  .field-wrap textarea { min-height: 100px; resize: vertical; }
+
+  /* icon badge per field */
+  .field-icon {
+    position: absolute;
+    left: .85rem;
+    bottom: .78rem;
+    font-size: 1rem;
+    pointer-events: none;
+    line-height: 1;
+  }
+
+  /* pill tag showing price/rate */
+  .rate-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+    background: linear-gradient(135deg, var(--rose), var(--rose-lt));
+    color: #fff;
+    font-weight: 800;
+    font-size: .82rem;
+    border-radius: 50px;
+    padding: .3rem .85rem;
+    margin-top: .6rem;
+    box-shadow: 0 3px 10px rgba(199,92,122,.35);
+  }
+
+  /* ── submit button ── */
+  .bk-btn {
+    width: 100%;
+    padding: .95rem;
+    background: linear-gradient(135deg, var(--teal), var(--teal-dk));
+    color: #fff;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.2rem;
+    letter-spacing: .6px;
+    border: none;
+    border-radius: 16px;
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(56,160,144,.4);
+    transition: transform .15s, box-shadow .15s;
+    margin-top: .5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .bk-btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,.18), transparent);
+    border-radius: inherit;
+  }
+  .bk-btn:hover  { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(56,160,144,.45); }
+  .bk-btn:active { transform: translateY(0);    box-shadow: 0 4px 14px rgba(56,160,144,.4);  }
+
+  /* ── bottom note ── */
+  .bk-note {
+    text-align: center;
+    font-size: .8rem;
+    color: var(--muted);
+    margin-top: 1rem;
+    font-weight: 600;
+  }
+  .bk-note span { color: var(--rose); }
+</style>
+
+<div class="bk-page">
+
+  <!-- ░░ DOODLE LAYER ░░ -->
+
+  <!-- Star / asterisk -->
+  <svg class="doodle doodle-star" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M40 5 L43 35 L73 38 L43 41 L40 71 L37 41 L7 38 L37 35 Z" stroke="#c75c7a" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="40" cy="38" r="5" fill="#c75c7a" opacity=".4"/>
+  </svg>
+
+  <!-- Pencil -->
+  <svg class="doodle doodle-pencil" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="28" y="8" width="18" height="52" rx="4" stroke="#c75c7a" stroke-width="2.5" fill="none"/>
+    <polygon points="28,60 46,60 37,74" stroke="#c75c7a" stroke-width="2.5" fill="none" stroke-linejoin="round"/>
+    <line x1="28" y1="18" x2="46" y2="18" stroke="#c75c7a" stroke-width="2"/>
+    <rect x="28" y="8" width="18" height="10" rx="3" fill="#c75c7a" opacity=".25"/>
+  </svg>
+
+  <!-- Book -->
+  <svg class="doodle doodle-book" viewBox="0 0 90 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="12" y="15" width="66" height="55" rx="6" stroke="#4ab8a8" stroke-width="2.5" fill="none"/>
+    <line x1="45" y1="15" x2="45" y2="70" stroke="#4ab8a8" stroke-width="2"/>
+    <line x1="22" y1="30" x2="40" y2="30" stroke="#4ab8a8" stroke-width="1.8" stroke-linecap="round"/>
+    <line x1="22" y1="40" x2="40" y2="40" stroke="#4ab8a8" stroke-width="1.8" stroke-linecap="round"/>
+    <line x1="22" y1="50" x2="36" y2="50" stroke="#4ab8a8" stroke-width="1.8" stroke-linecap="round"/>
+    <line x1="50" y1="30" x2="68" y2="30" stroke="#4ab8a8" stroke-width="1.8" stroke-linecap="round"/>
+    <line x1="50" y1="40" x2="68" y2="40" stroke="#4ab8a8" stroke-width="1.8" stroke-linecap="round"/>
+    <line x1="50" y1="50" x2="62" y2="50" stroke="#4ab8a8" stroke-width="1.8" stroke-linecap="round"/>
+  </svg>
+
+  <!-- Light-bulb -->
+  <svg class="doodle doodle-bulb" viewBox="0 0 80 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M40 10 C24 10 16 22 16 32 C16 44 26 50 30 56 L50 56 C54 50 64 44 64 32 C64 22 56 10 40 10 Z" stroke="#c75c7a" stroke-width="2.5" fill="none"/>
+    <rect x="30" y="56" width="20" height="7" rx="3" stroke="#c75c7a" stroke-width="2" fill="none"/>
+    <rect x="33" y="63" width="14" height="6" rx="3" stroke="#c75c7a" stroke-width="2" fill="none"/>
+    <line x1="40" y1="10" x2="40" y2="4"  stroke="#c75c7a" stroke-width="2" stroke-linecap="round"/>
+    <line x1="16" y1="25" x2="11" y2="20" stroke="#c75c7a" stroke-width="2" stroke-linecap="round"/>
+    <line x1="64" y1="25" x2="69" y2="20" stroke="#c75c7a" stroke-width="2" stroke-linecap="round"/>
+  </svg>
+
+  <!-- Dots grid -->
+  <svg class="doodle doodle-dots" viewBox="0 0 55 75" fill="none" xmlns="http://www.w3.org/2000/svg">
+    {% for r in "0123456" %}{% for c in "012" %}
+    <circle cx="{{ forloop.parentloop.counter0|add:0|floatformat:0 }}" cy="0" r="3" fill="#c75c7a"/>
+    {% endfor %}{% endfor %}
+    <!-- static fallback grid -->
+    <circle cx="10" cy="10" r="3" fill="#c75c7a"/><circle cx="25" cy="10" r="3" fill="#c75c7a"/><circle cx="40" cy="10" r="3" fill="#c75c7a"/>
+    <circle cx="10" cy="24" r="3" fill="#c75c7a"/><circle cx="25" cy="24" r="3" fill="#c75c7a"/><circle cx="40" cy="24" r="3" fill="#c75c7a"/>
+    <circle cx="10" cy="38" r="3" fill="#c75c7a"/><circle cx="25" cy="38" r="3" fill="#c75c7a"/><circle cx="40" cy="38" r="3" fill="#c75c7a"/>
+    <circle cx="10" cy="52" r="3" fill="#c75c7a"/><circle cx="25" cy="52" r="3" fill="#c75c7a"/><circle cx="40" cy="52" r="3" fill="#c75c7a"/>
+    <circle cx="10" cy="66" r="3" fill="#c75c7a"/><circle cx="25" cy="66" r="3" fill="#c75c7a"/><circle cx="40" cy="66" r="3" fill="#c75c7a"/>
+  </svg>
+
+  <!-- Wave -->
+  <svg class="doodle doodle-wave" viewBox="0 0 100 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0 20 C15 5, 35 35, 50 20 C65 5, 85 35, 100 20" stroke="#4ab8a8" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M0 30 C15 15, 35 45, 50 30 C65 15, 85 45, 100 30" stroke="#4ab8a8" stroke-width="2" fill="none" stroke-linecap="round" opacity=".5"/>
+  </svg>
+
+  <!-- ░░ CARD ░░ -->
+  <div class="bk-card">
+
+    <!-- top squiggle accent -->
+    <svg class="card-squiggle" viewBox="0 0 160 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 14 C20 0, 40 28, 60 14 C80 0, 100 28, 120 14 C140 0, 155 22, 160 14"
+            stroke="#c75c7a" stroke-width="3" fill="none" stroke-linecap="round" opacity=".55"/>
+    </svg>
+
+    <!-- header -->
+    <div class="bk-header">
+      <span class="bk-emoji">📅</span>
+      <h2 class="bk-title">Book a Session</h2>
+      <p class="bk-sub">
+        with <strong>{{ tutor.user.username }}</strong>
+      </p>
+      <div class="rate-pill">💰 ${{ tutor.hourly_rate }}/hr</div>
+    </div>
+
+    <div class="bk-divider">✏️ Your details</div>
+
+    <form method="POST">
+      {% csrf_token %}
+
+      {% for field in form %}
+      <div class="field-wrap">
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+
+        {# choose an icon based on field name #}
+        {% if 'date' in field.html_name or 'time' in field.html_name %}
+          <span class="field-icon">🗓️</span>
+        {% elif 'note' in field.html_name or 'message' in field.html_name %}
+          <span class="field-icon">📝</span>
+        {% elif 'subject' in field.html_name or 'topic' in field.html_name %}
+          <span class="field-icon">📚</span>
+        {% elif 'duration' in field.html_name %}
+          <span class="field-icon">⏱️</span>
+        {% else %}
+          <span class="field-icon">✏️</span>
+        {% endif %}
+
+        {{ field }}
+
+        {% if field.errors %}
+          <div style="color:var(--rose);font-size:.8rem;margin-top:.3rem;font-weight:700;">
+            {{ field.errors|join:", " }}
+          </div>
+        {% endif %}
+      </div>
+      {% endfor %}
+
+      <button type="submit" class="bk-btn">
+        🎉 Confirm Booking
+      </button>
+    </form>
+
+    <p class="bk-note">
+      🔒 Secure booking · <span>No charge until confirmed</span>
+    </p>
+  </div>
+</div>
+
+{% endblock %}

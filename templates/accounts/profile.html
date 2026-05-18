@@ -1,0 +1,361 @@
+{% extends 'base.html' %}
+{% block title %}Profile{% endblock %}
+ 
+{% block content %}
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap');
+ 
+  :root {
+    --rose:    #c75c7a;
+    --rose-lt: #e8849e;
+    --rose-bg: #fce8ee;
+    --teal:    #4ab8a8;
+    --teal-dk: #38a090;
+    --teal-bg: #e4f7f4;
+    --cream:   #fff8f9;
+    --ink:     #2e2535;
+    --muted:   #8a7890;
+    --lavender:#f0e8f4;
+  }
+ 
+  html, body { margin: 0 !important; padding: 0 !important; }
+ 
+  /* ── page ── */
+  .pf-page {
+    min-height: 100vh;
+    background: var(--lavender);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 1rem;
+    position: relative;
+    overflow: hidden;
+    font-family: 'Nunito', sans-serif;
+  }
+ 
+  /* ── doodles ── */
+  .doodle { position: absolute; pointer-events: none; opacity: .52; }
+  .d-star    { top: 4%;   left: 3%;   width: 68px;  animation: spin   18s linear      infinite; }
+  .d-ruler   { top: 8%;   right: 4%;  width: 85px;  animation: wobble  6s ease-in-out infinite; }
+  .d-cap     { bottom:10%;left: 3%;   width: 90px;  animation: float   7s ease-in-out infinite; }
+  .d-rocket  { bottom: 7%;right: 3%;  width: 78px;  animation: pulse-d 4s ease-in-out infinite; }
+  .d-dots    { top: 42%;  left: 1%;   width: 52px;  opacity:.3; }
+  .d-wave    { top: 58%;  right: 1%;  width: 95px;  opacity:.28; }
+ 
+  @keyframes spin    { to { transform: rotate(360deg); } }
+  @keyframes wobble  { 0%,100%{transform:rotate(-8deg)}50%{transform:rotate(8deg)} }
+  @keyframes float   { 0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)} }
+  @keyframes pulse-d { 0%,100%{transform:scale(1)}50%{transform:scale(1.12)} }
+ 
+  /* ── card ── */
+  .pf-card {
+    background: var(--cream);
+    border-radius: 28px;
+    box-shadow: 8px 8px 0 var(--rose-lt), 0 22px 60px rgba(0,0,0,.11);
+    width: 100%;
+    max-width: 500px;
+    position: relative;
+    z-index: 10;
+    overflow: hidden;
+    animation: card-in .55s cubic-bezier(.34,1.56,.64,1) both;
+  }
+  @keyframes card-in { from{opacity:0;transform:translateY(28px) scale(.96)} to{opacity:1;transform:none} }
+ 
+  /* ── banner ── */
+  .pf-banner {
+    background: linear-gradient(135deg, var(--rose) 0%, var(--rose-lt) 100%);
+    height: 110px;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+  }
+  /* wavy bottom edge */
+  .pf-banner::after {
+    content: '';
+    position: absolute;
+    bottom: -1px; left: 0; right: 0;
+    height: 36px;
+    background: var(--cream);
+    clip-path: ellipse(55% 100% at 50% 100%);
+  }
+  /* banner doodle squiggles */
+  .banner-squig {
+    position: absolute;
+    opacity: .22;
+  }
+ 
+  /* ── avatar ── */
+  .pf-avatar-wrap {
+    display: flex;
+    justify-content: center;
+    margin-top: -48px;
+    position: relative;
+    z-index: 2;
+  }
+  .pf-avatar {
+    width: 96px; height: 96px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--teal), var(--teal-dk));
+    border: 5px solid var(--cream);
+    box-shadow: 0 6px 22px rgba(74,184,168,.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.6rem;
+    animation: float 5s ease-in-out infinite;
+  }
+ 
+  /* ── body ── */
+  .pf-body { padding: 1rem 2.2rem 2.2rem; }
+ 
+  .pf-name {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.85rem;
+    color: var(--rose);
+    text-align: center;
+    margin: .6rem 0 .2rem;
+  }
+ 
+  /* role badge */
+  .pf-role-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+    background: linear-gradient(135deg, var(--teal), var(--teal-dk));
+    color: #fff;
+    font-weight: 800;
+    font-size: .78rem;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+    border-radius: 50px;
+    padding: .28rem .9rem;
+    box-shadow: 0 3px 10px rgba(74,184,168,.38);
+    margin: 0 auto .3rem;
+    display: block;
+    width: fit-content;
+  }
+ 
+  /* ── divider ── */
+  .pf-divider {
+    display: flex;
+    align-items: center;
+    gap: .7rem;
+    margin: 1.4rem 0 1.3rem;
+    color: var(--rose-lt);
+    font-size: .78rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .pf-divider::before,.pf-divider::after {
+    content:''; flex:1; height:2px; border-radius:2px;
+    background: linear-gradient(90deg,transparent,var(--rose-lt));
+  }
+  .pf-divider::after { background: linear-gradient(270deg,transparent,var(--rose-lt)); }
+ 
+  /* ── info rows ── */
+  .pf-info { display: flex; flex-direction: column; gap: .85rem; }
+ 
+  .pf-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: #fff;
+    border: 2px solid #f0e6f0;
+    border-radius: 14px;
+    padding: .8rem 1.1rem;
+    transition: border-color .2s, transform .2s;
+  }
+  .pf-row:hover {
+    border-color: var(--teal);
+    transform: translateX(4px);
+  }
+  .pf-row-icon {
+    width: 40px; height: 40px;
+    border-radius: 11px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+  }
+  .icon-rose { background: var(--rose-bg); }
+  .icon-teal { background: var(--teal-bg); }
+  .icon-purple { background: #f0e8f8; }
+ 
+  .pf-row-text { flex: 1; }
+  .pf-row-label {
+    font-size: .73rem;
+    font-weight: 800;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: .1rem;
+  }
+  .pf-row-value {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--ink);
+  }
+ 
+  /* ── button ── */
+  .pf-btn {
+    display: block;
+    width: 100%;
+    padding: .9rem;
+    background: linear-gradient(135deg, var(--teal), var(--teal-dk));
+    color: #fff;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.15rem;
+    letter-spacing: .5px;
+    border: none;
+    border-radius: 16px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    box-shadow: 0 6px 20px rgba(56,160,144,.38);
+    transition: transform .15s, box-shadow .15s;
+    margin-top: 1.6rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .pf-btn::after {
+    content:'';
+    position:absolute;inset:0;
+    background:linear-gradient(135deg,rgba(255,255,255,.18),transparent);
+    border-radius:inherit;
+  }
+  .pf-btn:hover  { transform:translateY(-3px); box-shadow:0 10px 28px rgba(56,160,144,.44); color:#fff; text-decoration:none; }
+  .pf-btn:active { transform:translateY(0); }
+ 
+  /* ── top squiggle ── */
+  .card-squiggle {
+    position:absolute;
+    top:-20px; left:50%; transform:translateX(-50%);
+    width:150px;
+  }
+</style>
+ 
+<div class="pf-page">
+ 
+  <!-- DOODLES -->
+  <!-- Asterisk star -->
+  <svg class="doodle d-star" viewBox="0 0 80 80" fill="none">
+    <path d="M40 6 L43 34 L71 37 L43 40 L40 68 L37 40 L9 37 L37 34Z" stroke="#c75c7a" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="40" cy="37" r="5" fill="#c75c7a" opacity=".38"/>
+  </svg>
+ 
+  <!-- Ruler -->
+  <svg class="doodle d-ruler" viewBox="0 0 85 30" fill="none">
+    <rect x="2" y="5" width="81" height="20" rx="4" stroke="#4ab8a8" stroke-width="2.5" fill="none"/>
+    <line x1="15" y1="5"  x2="15" y2="25" stroke="#4ab8a8" stroke-width="1.8"/>
+    <line x1="28" y1="5"  x2="28" y2="18" stroke="#4ab8a8" stroke-width="1.5"/>
+    <line x1="41" y1="5"  x2="41" y2="25" stroke="#4ab8a8" stroke-width="1.8"/>
+    <line x1="54" y1="5"  x2="54" y2="18" stroke="#4ab8a8" stroke-width="1.5"/>
+    <line x1="67" y1="5"  x2="67" y2="25" stroke="#4ab8a8" stroke-width="1.8"/>
+  </svg>
+ 
+  <!-- Grad cap -->
+  <svg class="doodle d-cap" viewBox="0 0 90 80" fill="none">
+    <polygon points="45,10 82,28 45,46 8,28" stroke="#c75c7a" stroke-width="2.5" fill="none" stroke-linejoin="round"/>
+    <path d="M22 36 L22 58 C22 58 45 70 68 58 L68 36" stroke="#c75c7a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <line x1="82" y1="28" x2="82" y2="48" stroke="#c75c7a" stroke-width="2.5" stroke-linecap="round"/>
+    <circle cx="82" cy="50" r="4" fill="#c75c7a" opacity=".5"/>
+  </svg>
+ 
+  <!-- Rocket -->
+  <svg class="doodle d-rocket" viewBox="0 0 78 90" fill="none">
+    <path d="M39 8 C39 8 58 20 58 46 L39 58 L20 46 C20 20 39 8 39 8Z" stroke="#4ab8a8" stroke-width="2.5" fill="none" stroke-linejoin="round"/>
+    <circle cx="39" cy="34" r="8" stroke="#4ab8a8" stroke-width="2" fill="none"/>
+    <path d="M20 46 L10 62 L26 56Z" stroke="#4ab8a8" stroke-width="2" fill="none" stroke-linejoin="round"/>
+    <path d="M58 46 L68 62 L52 56Z" stroke="#4ab8a8" stroke-width="2" fill="none" stroke-linejoin="round"/>
+    <path d="M33 58 L33 70 M39 60 L39 74 M45 58 L45 70" stroke="#c75c7a" stroke-width="2" stroke-linecap="round" opacity=".7"/>
+  </svg>
+ 
+  <!-- Dot grid -->
+  <svg class="doodle d-dots" viewBox="0 0 52 72" fill="none">
+    <circle cx="10" cy="10" r="3" fill="#c75c7a"/><circle cx="26" cy="10" r="3" fill="#c75c7a"/><circle cx="42" cy="10" r="3" fill="#c75c7a"/>
+    <circle cx="10" cy="24" r="3" fill="#c75c7a"/><circle cx="26" cy="24" r="3" fill="#c75c7a"/><circle cx="42" cy="24" r="3" fill="#c75c7a"/>
+    <circle cx="10" cy="38" r="3" fill="#c75c7a"/><circle cx="26" cy="38" r="3" fill="#c75c7a"/><circle cx="42" cy="38" r="3" fill="#c75c7a"/>
+    <circle cx="10" cy="52" r="3" fill="#c75c7a"/><circle cx="26" cy="52" r="3" fill="#c75c7a"/><circle cx="42" cy="52" r="3" fill="#c75c7a"/>
+    <circle cx="10" cy="66" r="3" fill="#c75c7a"/><circle cx="26" cy="66" r="3" fill="#c75c7a"/><circle cx="42" cy="66" r="3" fill="#c75c7a"/>
+  </svg>
+ 
+  <!-- Wave -->
+  <svg class="doodle d-wave" viewBox="0 0 100 40" fill="none">
+    <path d="M0 20 C15 5,35 35,50 20 C65 5,85 35,100 20" stroke="#4ab8a8" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M0 30 C15 15,35 45,50 30 C65 15,85 45,100 30" stroke="#4ab8a8" stroke-width="2" fill="none" stroke-linecap="round" opacity=".5"/>
+  </svg>
+ 
+  <!-- CARD -->
+  <div class="pf-card">
+ 
+    <!-- top squiggle -->
+    <svg class="card-squiggle" viewBox="0 0 150 26" fill="none">
+      <path d="M0 13 C18 0,38 26,56 13 C74 0,96 26,114 13 C132 0,145 20,150 13"
+            stroke="#c75c7a" stroke-width="3" fill="none" stroke-linecap="round" opacity=".5"/>
+    </svg>
+ 
+    <!-- banner -->
+    <div class="pf-banner">
+      <!-- scattered marks inside banner -->
+      <svg class="banner-squig" style="top:8px;left:18px;width:55px;" viewBox="0 0 55 20" fill="none">
+        <path d="M0 10 C10 2,22 18,32 10 C42 2,52 14,55 10" stroke="#fff" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      </svg>
+      <svg class="banner-squig" style="top:12px;right:22px;width:40px;" viewBox="0 0 40 40" fill="none">
+        <path d="M20 4 L22 18 L36 20 L22 22 L20 36 L18 22 L4 20 L18 18Z" stroke="#fff" stroke-width="2" fill="none"/>
+      </svg>
+      <svg class="banner-squig" style="bottom:16px;left:38%;width:30px;" viewBox="0 0 30 30" fill="none">
+        <circle cx="15" cy="15" r="11" stroke="#fff" stroke-width="2" fill="none" stroke-dasharray="4 3"/>
+      </svg>
+    </div>
+ 
+    <!-- avatar -->
+    <div class="pf-avatar-wrap">
+      <div class="pf-avatar">🎓</div>
+    </div>
+ 
+    <!-- body -->
+    <div class="pf-body">
+ 
+      <h2 class="pf-name">{{ user.username }}</h2>
+      <span class="pf-role-badge">⭐ {{ user.role }}</span>
+ 
+      <div class="pf-divider">👤 Account Info</div>
+ 
+      <div class="pf-info">
+ 
+        <div class="pf-row">
+          <div class="pf-row-icon icon-rose">🙂</div>
+          <div class="pf-row-text">
+            <div class="pf-row-label">Username</div>
+            <div class="pf-row-value">{{ user.username }}</div>
+          </div>
+        </div>
+ 
+        <div class="pf-row">
+          <div class="pf-row-icon icon-teal">✉️</div>
+          <div class="pf-row-text">
+            <div class="pf-row-label">Email</div>
+            <div class="pf-row-value">{{ user.email }}</div>
+          </div>
+        </div>
+ 
+        <div class="pf-row">
+          <div class="pf-row-icon icon-purple">🎭</div>
+          <div class="pf-row-text">
+            <div class="pf-row-label">Role</div>
+            <div class="pf-row-value">{{ user.role }}</div>
+          </div>
+        </div>
+ 
+      </div>
+ 
+      <a href="{% url 'dashboard' %}" class="pf-btn">
+        🏠 Back to Dashboard
+      </a>
+ 
+    </div>
+  </div>
+ 
+</div>
+{% endblock %}

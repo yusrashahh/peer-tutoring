@@ -1,0 +1,193 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+
+<!-- Welcome Hero -->
+<div class="mb-4 p-4 rounded-4 text-white"
+    style="background:linear-gradient(135deg,#a0405e 0%,#CE6385 60%,#CE6385 100%);
+    margin-left:calc(-50vw + 50%);
+    margin-right:calc(-50vw + 50%);
+    padding-left:calc(50vw - 50%) !important;
+    padding-right:calc(50vw - 50%) !important;
+    border-radius:0 !important;">
+  <div class="container">
+    <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+      <div>
+        <h1 class="fw-bold mb-1" style="font-size:2rem">
+          Welcome back, {{ user.username }}! 👋
+        </h1>
+        <p style="color:#F8D0D0;margin:0">
+          You are logged in as a
+          <span style="background:rgba(16,185,129,0.25);
+              border:1px solid rgba(16,185,129,0.4);
+              color:#6ee7b7;padding:2px 12px;border-radius:20px;
+              font-weight:600;font-size:0.85rem">
+            {{ user.role }}
+          </span>
+        </p>
+      </div>
+      <div style="font-size:4rem;opacity:0.8">
+        {% if user.role == 'tutor' %}👨‍🏫{% else %}👩‍🎓{% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container" style="margin-top:32px">
+
+{% if user.role == 'student' %}
+
+<div class="row g-3 mb-4">
+    <div class="col-6 col-md-3">
+        <div class="card p-3 text-center h-100" style="border-top:3px solid #4CAFAE">
+            <div style="font-size:2rem;font-weight:800;color:#CE6385">{{ total }}</div>
+            <div style="font-size:0.8rem;color:#6b7280">Total Bookings</div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card p-3 text-center h-100" style="border-top:3px solid #EB98B4">
+            <div style="font-size:2rem;font-weight:800;color:#CE6385">{{ confirmed }}</div>
+            <div style="font-size:0.8rem;color:#6b7280">Confirmed</div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card p-3 text-center h-100" style="border-top:3px solid #FCCE90">
+            <div style="font-size:2rem;font-weight:800;color:#CE6385">{{ completed }}</div>
+            <div style="font-size:0.8rem;color:#6b7280">Completed</div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card p-3 text-center h-100" style="border-top:3px solid #F8D0D0">
+            <div style="font-size:2rem;font-weight:800;color:#CE6385">{{ pending }}</div>
+            <div style="font-size:0.8rem;color:#6b7280">Pending</div>
+        </div>
+    </div>
+</div>
+
+  <!-- Main action cards -->
+  <h5 class="fw-bold mb-3" style="color:#CE6385">Quick Actions</h5>
+  <div class="row g-4 mb-4">
+    <div class="col-md-4">
+      <div class="card card-accent p-4 h-100">
+        <div style="font-size:2.5rem;margin-bottom:12px">🔍</div>
+        <h5 class="fw-bold" style="color:#CE6385">Find a Tutor</h5>
+        <p class="text-muted small mb-3">Browse all available tutors by subject, price and rating</p>
+        <a href="{% url 'tutor_list' %}" class="btn btn-primary mt-auto">Browse Tutors</a>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card card-accent p-4 h-100">
+        <div style="font-size:2.5rem;margin-bottom:12px">📅</div>
+        <h5 class="fw-bold" style="color:#CE6385">My Bookings</h5>
+        <p class="text-muted small mb-3">View your upcoming and past tutoring sessions</p>
+        <a href="{% url 'my_bookings' %}" class="btn btn-outline-primary mt-auto">View Bookings</a>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card card-accent p-4 h-100">
+        <div style="font-size:2.5rem;margin-bottom:12px">👤</div>
+        <h5 class="fw-bold" style="color:#CE6385">My Profile</h5>
+        <p class="text-muted small mb-3">Update your personal information and preferences</p>
+        <a href="{% url 'profile' %}" class="btn btn-outline-primary mt-auto">Edit Profile</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tips banner -->
+  <div class="card p-4" style="background:linear-gradient(135deg,#fff5f7,#fce8ec);
+      border:1px solid #F8D0D0">
+    <div class="d-flex align-items-center gap-3">
+      <span style="font-size:2rem">💡</span>
+      <div>
+        <div class="fw-bold" style="color:#CE6385">Pro Tip</div>
+        <div class="text-muted small">
+          Filter tutors by subject and read their reviews before booking
+          to find the perfect match for your learning style!
+        </div>
+      </div>
+      <a href="{% url 'tutor_list' %}" class="btn btn-primary ms-auto px-4"
+          style="white-space:nowrap">
+        Find Now →
+      </a>
+    </div>
+  </div>
+
+{% elif user.role == 'tutor' %}
+
+<div class="row g-3 mb-4">
+    <div class="col-6 col-md-3">
+        <div class="card p-3 text-center h-100" style="border-top:3px solid #4CAFAE">
+            <div style="font-size:2rem;font-weight:800;color:#CE6385">{{ pending }}</div>
+            <div style="font-size:0.8rem;color:#6b7280">Pending Bookings</div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card p-3 text-center h-100" style="border-top:3px solid #EB98B4">
+            <div style="font-size:2rem;font-weight:800;color:#CE6385">{{ confirmed }}</div>
+            <div style="font-size:0.8rem;color:#6b7280">Confirmed</div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card p-3 text-center h-100" style="border-top:3px solid #FCCE90">
+            <div style="font-size:2rem;font-weight:800;color:#CE6385">{{ completed }}</div>
+            <div style="font-size:0.8rem;color:#6b7280">Sessions Done</div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card p-3 text-center h-100" style="border-top:3px solid #F8D0D0">
+            <div style="font-size:2rem;font-weight:800;color:#CE6385">⭐ {{ rating|floatformat:1 }}</div>
+            <div style="font-size:0.8rem;color:#6b7280">Your Rating</div>
+        </div>
+    </div>
+</div>
+  <!-- Tutor action cards -->
+  <h5 class="fw-bold mb-3" style="color:#CE6385">Quick Actions</h5>
+  <div class="row g-4 mb-4">
+    <div class="col-md-4">
+      <div class="card card-accent p-4 h-100">
+        <div style="font-size:2.5rem;margin-bottom:12px">✏️</div>
+        <h5 class="fw-bold" style="color:#CE6385">Edit Profile</h5>
+        <p class="text-muted small mb-3">Update your bio, subjects, hourly rate and availability</p>
+        <a href="{% url 'edit_tutor_profile' %}" class="btn btn-primary mt-auto">Edit Profile</a>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card card-accent p-4 h-100">
+        <div style="font-size:2.5rem;margin-bottom:12px">📅</div>
+        <h5 class="fw-bold" style="color:#CE6385">My Sessions</h5>
+        <p class="text-muted small mb-3">View and manage incoming session bookings from students</p>
+        <a href="{% url 'my_bookings' %}" class="btn btn-outline-primary mt-auto">View Sessions</a>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card card-accent p-4 h-100">
+        <div style="font-size:2.5rem;margin-bottom:12px">🔍</div>
+        <h5 class="fw-bold" style="color:#CE6385">My Listing</h5>
+        <p class="text-muted small mb-3">See how your tutor profile looks to students browsing</p>
+        <a href="{% url 'tutor_list' %}" class="btn btn-outline-primary mt-auto">View Listing</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Earnings tip -->
+  <div class="card p-4" style="background:linear-gradient(135deg,#a0405e,#CE6385)">
+    <div class="d-flex align-items-center gap-3">
+      <span style="font-size:2rem">💰</span>
+      <div>
+        <div class="fw-bold text-white">Boost your earnings</div>
+        <div class="small" style="color:#F8D0D0">
+          Complete your profile with a bio, subjects and profile picture
+          to get more bookings from students!
+        </div>
+      </div>
+      <a href="{% url 'edit_tutor_profile' %}" class="btn ms-auto px-4 fw-bold"
+          style="background:#4CAFAE;color:#fff;border-radius:25px;white-space:nowrap">
+        Complete Profile →
+      </a>
+    </div>
+  </div>
+
+{% endif %}
+
+</div>
+{% endblock %}
