@@ -1,1 +1,1 @@
-web: gunicorn tutoring_platform.wsgi --log-file -
+web: gunicorn tutoring_platform.wsgi:application

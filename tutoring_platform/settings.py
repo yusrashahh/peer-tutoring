@@ -1,5 +1,8 @@
 import os
 import dj_database_url
+from dotenv import load_dotenv
+
+load_dotenv()
 """
 Django settings for tutoring_platform project.
 
@@ -22,12 +25,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-^a!l15f&hw)$b1clsr&0bb%vjlqq_c1(6$=f62h@=xyj599&y)'
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG') == 'True'
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split(',')
 
 
 # Application definition
@@ -88,7 +91,7 @@ WSGI_APPLICATION = 'tutoring_platform.wsgi.application'
 
 DATABASES = {
     'default': dj_database_url.config(
-        default=f'sqlite:///{BASE_DIR / "db.sqlite3"}',
+        default='sqlite:///db.sqlite3',
         conn_max_age=600
     )
 }
