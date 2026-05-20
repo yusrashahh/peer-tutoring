@@ -11,18 +11,7 @@ def parents_view(request):
     return render(request, 'accounts/parents.html')
 
 def home_view(request):
-    featured_tutors = TutorProfile.objects.order_by('-rating')[:3]
-    tutor_count = TutorProfile.objects.count()
-    subject_count = Subject.objects.count()
-    booking_count = Booking.objects.filter(status='completed').count()
-    subjects = Subject.objects.all()[:8]   # ← add this
-    return render(request, 'home.html', {
-        'featured_tutors': featured_tutors,
-        'tutor_count': tutor_count,
-        'subject_count': subject_count,
-        'booking_count': booking_count,
-        'subjects': subjects,             # ← add this
-    })
+    return HttpResponse("DEBUG: home_view is working")
 
 def register_view(request):
     if request.method == 'POST':
@@ -94,6 +83,3 @@ def dashboard_view(request):
 @login_required
 def profile_view(request):
     return render(request, 'accounts/profile.html')
-
-def home(request):
-    return render(request, 'home.html')
