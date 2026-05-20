@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
@@ -10,19 +11,7 @@ def parents_view(request):
     return render(request, 'accounts/parents.html')
 
 def home_view(request):
-    featured_tutors = TutorProfile.objects.order_by('-rating')[:3]
-    tutor_count = TutorProfile.objects.count()
-    subject_count = Subject.objects.count()
-    booking_count = Booking.objects.filter(status='completed').count()
-    subjects = Subject.objects.all()[:8]
-
-    return render(request, 'home.html', {
-        'featured_tutors': featured_tutors,
-        'tutor_count': tutor_count,
-        'subject_count': subject_count,
-        'booking_count': booking_count,
-        'subjects': subjects,
-    })
+    return HttpResponse("HOME DEBUG OK - NO DATABASE")
 
 def register_view(request):
     if request.method == 'POST':
