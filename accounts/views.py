@@ -96,4 +96,4 @@ def profile_view(request):
     return render(request, 'accounts/profile.html')
 
 def home(request):
-    return HttpResponse("🎉 Django is running successfully on Render!")
+    return render(request, 'home.html')
