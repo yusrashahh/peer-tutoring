@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
@@ -93,3 +94,6 @@ def dashboard_view(request):
 @login_required
 def profile_view(request):
     return render(request, 'accounts/profile.html')
+
+def home(request):
+    return HttpResponse("🎉 Django is running successfully on Render!")
