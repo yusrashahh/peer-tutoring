@@ -11,7 +11,13 @@ def parents_view(request):
     return render(request, 'accounts/parents.html')
 
 def home_view(request):
-    return HttpResponse("HOME DEBUG OK - NO DATABASE")
+    from tutors.models import TutorProfile
+
+    try:
+        count = TutorProfile.objects.count()
+        return HttpResponse(f"DB OK - Tutors: {count}")
+    except Exception as e:
+        return HttpResponse(f"DB ERROR: {str(e)}")
 
 def register_view(request):
     if request.method == 'POST':
