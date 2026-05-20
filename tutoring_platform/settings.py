@@ -33,7 +33,7 @@ DEBUG = os.environ.get('DEBUG') == 'True'
 ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
-    ".railway.app"
+    ".onrender.com"
 ]
 
 
@@ -95,8 +95,9 @@ WSGI_APPLICATION = 'tutoring_platform.wsgi.application'
 
 DATABASES = {
     'default': dj_database_url.config(
-        default='sqlite:///db.sqlite3',
-        conn_max_age=600
+        default=os.environ.get('DATABASE_URL'),
+        conn_max_age=600,
+        ssl_require=True
     )
 }
 

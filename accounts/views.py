@@ -58,7 +58,6 @@ def logout_view(request):
     return redirect('login')
 
 @login_required
-@login_required
 def dashboard_view(request):
     from bookings.models import Booking
     from tutors.models import TutorProfile
